@@ -18,12 +18,17 @@ export const VPNKeys = () => {
   const handleKeySelect = async (key: string) => {
     setSelectedKey(key);
     setIsChecking(true);
-    // Simulate ping check
+    // Simulate ping check with random value
     await new Promise((resolve) => setTimeout(resolve, 1500));
+    const pingValue = Math.floor(Math.random() * (200 - 50) + 50); // Random ping between 50-200ms
     setIsChecking(false);
     toast({
-      title: "Ключ выбран",
-      description: "Ваша ссылка для активации готова",
+      title: "Ключ готов",
+      description: (
+        <div>
+          Пинг: <span className="text-green-500 font-semibold">{pingValue} ms</span>
+        </div>
+      ),
     });
   };
 
@@ -34,7 +39,7 @@ export const VPNKeys = () => {
         description: "Пожалуйста, выберите ключ перед подключением",
         variant: "destructive",
       });
-      return;
+      return null;
     }
     const encodedKey = encodeURIComponent(selectedKey);
     return `https://ragimov700.ru/redirect/?app=${app}&config_url=${encodedKey}`;
