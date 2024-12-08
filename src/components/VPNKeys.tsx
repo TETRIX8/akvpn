@@ -22,6 +22,7 @@ export const VPNKeys = () => {
     await new Promise((resolve) => setTimeout(resolve, 1500));
     const pingValue = Math.floor(Math.random() * (200 - 50) + 50); // Random ping between 50-200ms
     setIsChecking(false);
+    localStorage.setItem('selectedVPNKey', key);
     toast({
       title: "Ключ готов",
       description: (
@@ -30,19 +31,6 @@ export const VPNKeys = () => {
         </div>
       ),
     });
-  };
-
-  const generateConnectionUrl = (app: string) => {
-    if (!selectedKey) {
-      toast({
-        title: "Ошибка",
-        description: "Пожалуйста, выберите ключ перед подключением",
-        variant: "destructive",
-      });
-      return null;
-    }
-    const encodedKey = encodeURIComponent(selectedKey);
-    return `https://ragimov700.ru/redirect/?app=${app}&config_url=${encodedKey}`;
   };
 
   return (

@@ -2,32 +2,48 @@ import React from "react";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
 import { ArrowRight, Download } from "lucide-react";
+import { toast } from "./ui/use-toast";
 
 interface PlatformLink {
   name: string;
   downloadUrl: string;
-  connectUrl: string;
+  app: string;
 }
 
 const platforms: PlatformLink[] = [
   {
     name: "iOS и macOS",
     downloadUrl: "https://apps.apple.com/ru/app/streisand/id6450534064",
-    connectUrl: "https://ragimov700.ru/redirect/?app=streisand&config_url=",
+    app: "streisand",
   },
   {
     name: "Android",
     downloadUrl: "https://play.google.com/store/apps/details?id=com.v2raytun.android",
-    connectUrl: "https://ragimov700.ru/redirect/?app=v2raytun&config_url=",
+    app: "v2raytun",
   },
   {
     name: "Windows",
     downloadUrl: "https://github.com/hiddify/hiddify-next/releases/latest/download/Hiddify-Windows-Setup-x64.Msix",
-    connectUrl: "https://ragimov700.ru/redirect/?app=hiddify&config_url=",
+    app: "hiddify",
   },
 ];
 
 export const SetupInstructions = () => {
+  const handleConnect = (app: string) => {
+    const selectedKey = localStorage.getItem('selectedVPNKey');
+    if (!selectedKey) {
+      toast({
+        title: "Ошибка",
+        description: "Пожалуйста, выберите ключ перед подключением",
+        variant: "destructive",
+      });
+      return;
+    }
+    const encodedKey = encodeURIComponent(selectedKey);
+    const url = `https://ragimov700.ru/redirect/?app=${app}&config_url=${encodedKey}`;
+    window.open(url, "_blank");
+  };
+
   return (
     <div className="space-y-8 animate-fade-in">
       <section className="space-y-4">
@@ -60,7 +76,7 @@ export const SetupInstructions = () => {
               <h3 className="font-semibold mb-2">{platform.name}</h3>
               <Button
                 className="w-full"
-                onClick={() => window.open(platform.connectUrl, "_blank")}
+                onClick={() => handleConnect(platform.app)}
               >
                 <ArrowRight className="mr-2 h-4 w-4" />
                 Подключиться
