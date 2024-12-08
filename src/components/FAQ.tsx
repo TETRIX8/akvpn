@@ -23,13 +23,21 @@ const faqItems = [
 
 export const FAQ = () => {
   return (
-    <div className="space-y-4 animate-fade-in">
-      <h2 className="text-2xl font-bold mb-4">Часто задаваемые вопросы</h2>
-      <Accordion type="single" collapsible className="w-full">
+    <div className="space-y-4 animate-fade-in backdrop-blur-sm bg-white/5 p-6 rounded-lg">
+      <h2 className="text-2xl font-bold mb-6 text-center text-white">Часто задаваемые вопросы</h2>
+      <Accordion type="single" collapsible className="w-full space-y-2">
         {faqItems.map((item, index) => (
-          <AccordionItem key={index} value={`item-${index}`}>
-            <AccordionTrigger>{item.question}</AccordionTrigger>
-            <AccordionContent>{item.answer}</AccordionContent>
+          <AccordionItem 
+            key={index} 
+            value={`item-${index}`}
+            className="bg-white/10 backdrop-blur-sm border-white/20 rounded-lg px-4"
+          >
+            <AccordionTrigger className="text-white hover:text-white/80">
+              {item.question}
+            </AccordionTrigger>
+            <AccordionContent className="text-white/70">
+              {item.answer}
+            </AccordionContent>
           </AccordionItem>
         ))}
       </Accordion>

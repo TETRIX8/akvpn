@@ -18,9 +18,8 @@ export const VPNKeys = () => {
   const handleKeySelect = async (key: string) => {
     setSelectedKey(key);
     setIsChecking(true);
-    // Simulate ping check with random value
     await new Promise((resolve) => setTimeout(resolve, 1500));
-    const pingValue = Math.floor(Math.random() * (200 - 50) + 50); // Random ping between 50-200ms
+    const pingValue = Math.floor(Math.random() * (200 - 50) + 50);
     setIsChecking(false);
     localStorage.setItem('selectedVPNKey', key);
     toast({
@@ -34,18 +33,18 @@ export const VPNKeys = () => {
   };
 
   return (
-    <div className="space-y-4 animate-fade-in">
-      <h2 className="text-2xl font-bold mb-4">Ключи VPN</h2>
+    <div className="space-y-4 animate-fade-in backdrop-blur-sm bg-white/5 p-6 rounded-lg">
+      <h2 className="text-2xl font-bold mb-6 text-center text-white">Ключи VPN</h2>
       <div className="grid gap-4">
         {vpnKeys.map((key, index) => (
-          <Card key={index} className="p-4">
+          <Card key={index} className="p-4 bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300">
             <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-              <div className="flex-1 truncate">
-                <code className="text-sm">{key.substring(0, 50)}...</code>
+              <div className="flex-1 truncate w-full md:w-auto">
+                <code className="text-xs md:text-sm text-white/80">{key.substring(0, 50)}...</code>
               </div>
-              <div className="flex gap-2">
+              <div className="flex gap-2 w-full md:w-auto">
                 {isChecking && selectedKey === key ? (
-                  <Button disabled>
+                  <Button disabled className="w-full md:w-auto bg-white/20">
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Проверяем связь...
                   </Button>
@@ -53,6 +52,7 @@ export const VPNKeys = () => {
                   <Button 
                     variant={selectedKey === key ? "default" : "outline"}
                     onClick={() => handleKeySelect(key)}
+                    className={`w-full md:w-auto ${selectedKey === key ? 'bg-vpn-blue hover:bg-vpn-blue/90' : 'bg-white/10 hover:bg-white/20'}`}
                   >
                     {selectedKey === key ? (
                       <>
