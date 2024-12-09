@@ -44,23 +44,37 @@ export const VPNKeys = ({ onKeySelect }: VPNKeysProps) => {
   };
 
   return (
-    <div className="space-y-4 animate-fade-in backdrop-blur-sm bg-white/5 p-6 rounded-lg">
-      <h2 className="text-2xl font-bold mb-6 text-center text-white">Ключи VPN</h2>
-      <div className="grid gap-4">
+    <div className="space-y-6 animate-fade-in backdrop-blur-lg bg-white/5 p-6 rounded-xl shadow-2xl border border-white/10">
+      <h2 className="text-2xl md:text-3xl font-bold mb-8 text-center text-white tracking-tight">
+        Ключи VPN
+      </h2>
+      <div className="grid gap-6">
         {vpnKeys.map((key, index) => (
-          <Card key={index} className="p-4 bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300">
-            <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-              <div className="flex-1 truncate w-full md:w-auto">
-                <div className="flex items-center gap-2">
-                  <code className="text-xs md:text-sm text-white/80">{key.substring(0, 50)}...</code>
-                  <span className="text-xs text-white/60 bg-white/10 px-2 py-1 rounded">
+          <Card 
+            key={index} 
+            className={`
+              p-5 bg-gradient-to-r from-white/5 to-white/10 
+              backdrop-blur-md border-white/20 
+              hover:bg-white/15 transition-all duration-300 
+              transform hover:scale-[1.02] hover:shadow-lg
+              rounded-xl
+            `}
+          >
+            <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
+              <div className="flex-1 space-y-2 w-full md:w-auto">
+                <div className="flex flex-wrap items-center gap-3">
+                  <code className="text-xs md:text-sm text-white/90 font-mono bg-black/20 px-3 py-1.5 rounded-lg">
+                    {key.substring(0, 40)}...
+                  </code>
+                  <span className="text-xs font-medium text-white/80 bg-vpn-blue/20 px-3 py-1.5 rounded-lg flex items-center gap-2">
+                    <div className="w-2 h-2 bg-vpn-blue rounded-full animate-pulse"></div>
                     {keyStats[key] || 0} выборов
                   </span>
                 </div>
               </div>
-              <div className="flex gap-2 w-full md:w-auto">
+              <div className="flex gap-3 w-full md:w-auto">
                 {isChecking && selectedKey === key ? (
-                  <Button disabled className="w-full md:w-auto bg-white/20">
+                  <Button disabled className="w-full md:w-auto bg-white/20 backdrop-blur-sm">
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Проверяем связь...
                   </Button>
@@ -68,7 +82,12 @@ export const VPNKeys = ({ onKeySelect }: VPNKeysProps) => {
                   <Button 
                     variant={selectedKey === key ? "default" : "outline"}
                     onClick={() => handleKeySelect(key)}
-                    className={`w-full md:w-auto ${selectedKey === key ? 'bg-vpn-blue hover:bg-vpn-blue/90' : 'bg-white/10 hover:bg-white/20'}`}
+                    className={`
+                      w-full md:w-auto transition-all duration-300
+                      ${selectedKey === key 
+                        ? 'bg-gradient-to-r from-vpn-blue to-vpn-blue/80 hover:from-vpn-blue/90 hover:to-vpn-blue/70 shadow-lg' 
+                        : 'bg-white/10 hover:bg-white/20 border-white/20'}
+                    `}
                   >
                     {selectedKey === key ? (
                       <>
