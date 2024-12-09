@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
 import { Loader2, Check } from "lucide-react";
@@ -18,6 +18,12 @@ const vpnKeys = [
 export const VPNKeys = ({ onKeySelect }: VPNKeysProps) => {
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [isChecking, setIsChecking] = useState(false);
+  const [keyStats, setKeyStats] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    const stats = JSON.parse(localStorage.getItem('keyStats') || '{}');
+    setKeyStats(stats);
+  }, []);
 
   const handleKeySelect = async (key: string) => {
     setSelectedKey(key);
@@ -45,7 +51,12 @@ export const VPNKeys = ({ onKeySelect }: VPNKeysProps) => {
           <Card key={index} className="p-4 bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300">
             <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
               <div className="flex-1 truncate w-full md:w-auto">
-                <code className="text-xs md:text-sm text-white/80">{key.substring(0, 50)}...</code>
+                <div className="flex items-center gap-2">
+                  <code className="text-xs md:text-sm text-white/80">{key.substring(0, 50)}...</code>
+                  <span className="text-xs text-white/60 bg-white/10 px-2 py-1 rounded">
+                    {keyStats[key] || 0} выборов
+                  </span>
+                </div>
               </div>
               <div className="flex gap-2 w-full md:w-auto">
                 {isChecking && selectedKey === key ? (
