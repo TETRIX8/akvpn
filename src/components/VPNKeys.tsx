@@ -4,6 +4,10 @@ import { Card } from "./ui/card";
 import { Loader2, Check } from "lucide-react";
 import { toast } from "./ui/use-toast";
 
+interface VPNKeysProps {
+  onKeySelect?: (key: string) => void;
+}
+
 const vpnKeys = [
   "vless://e0f12697-b29f-4599-8644-020713a4658b@185.121.14.164:443?type=tcp&security=reality&pbk=ccWQdcjsEfVWzqn63rxJr20Dlr6YgZTGz4KvR0EJ4W4&fp=random&sni=google.com&sid=294e0954dd9c1d34&spx=%2F#akvpn",
   "vless://56164655-0143-45d8-ab26-363cd11b2bb3@185.121.14.164:443?type=tcp&security=reality&pbk=ccWQdcjsEfVWzqn63rxJr20Dlr6YgZTGz4KvR0EJ4W4&fp=random&sni=google.com&sid=294e0954dd9c1d34&spx=%2F#akvpn1",
@@ -11,7 +15,7 @@ const vpnKeys = [
   "vless://8544e020-4124-44a3-a966-898ee27eab93@185.121.14.164:443?type=tcp&security=reality&pbk=ccWQdcjsEfVWzqn63rxJr20Dlr6YgZTGz4KvR0EJ4W4&fp=random&sni=google.com&sid=294e0954dd9c1d34&spx=%2F#akvpn3",
 ];
 
-export const VPNKeys = () => {
+export const VPNKeys = ({ onKeySelect }: VPNKeysProps) => {
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [isChecking, setIsChecking] = useState(false);
 
@@ -22,6 +26,7 @@ export const VPNKeys = () => {
     const pingValue = Math.floor(Math.random() * (200 - 50) + 50);
     setIsChecking(false);
     localStorage.setItem('selectedVPNKey', key);
+    onKeySelect?.(key);
     toast({
       title: "Ключ готов",
       description: (

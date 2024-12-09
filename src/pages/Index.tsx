@@ -1,10 +1,24 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { AnimatedTitle } from "@/components/AnimatedTitle";
 import { SetupInstructions } from "@/components/SetupInstructions";
 import { VPNKeys } from "@/components/VPNKeys";
 import { FAQ } from "@/components/FAQ";
 
 const Index = () => {
+  const [visitors, setVisitors] = useState(0);
+  const [keyStats, setKeyStats] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    // Get visitor count from localStorage or initialize
+    const storedVisitors = parseInt(localStorage.getItem('visitorCount') || '0');
+    setVisitors(storedVisitors + 1);
+    localStorage.setItem('visitorCount', (storedVisitors + 1).toString());
+
+    // Get key selection stats
+    const stats = JSON.parse(localStorage.getItem('keyStats') || '{}');
+    setKeyStats(stats);
+  }, []);
+
   return (
     <div className="min-h-screen bg-vpn-dark relative overflow-hidden">
       {/* Animated background */}
@@ -24,6 +38,28 @@ const Index = () => {
         </div>
       </div>
 
+      {/* Stats Bar */}
+      <div className="relative z-10 w-full bg-white/5 backdrop-blur-sm border-b border-white/10">
+        <div className="container mx-auto px-4 py-2">
+          <div className="flex flex-wrap justify-center md:justify-between items-center gap-4 text-sm text-white/80">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                <span>{visitors} посетителей</span>
+              </div>
+            </div>
+            <div className="flex flex-wrap justify-center gap-4">
+              {Object.entries(keyStats).map(([key, count], index) => (
+                <div key={index} className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-vpn-blue rounded-full" />
+                  <span>Ключ {index + 1}: {count} выборов</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Content */}
       <div className="container mx-auto px-4 py-8 md:py-12 relative z-10">
         {/* Hero Section */}
@@ -37,7 +73,12 @@ const Index = () => {
         {/* Main Content */}
         <div className="space-y-12 max-w-4xl mx-auto">
           <SetupInstructions />
-          <VPNKeys />
+          <VPNKeys onKeySelect={(key) => {
+            const stats = JSON.parse(localStorage.getItem('keyStats') || '{}');
+            stats[key] = (stats[key] || 0) + 1;
+            localStorage.setItem('keyStats', JSON.stringify(stats));
+            setKeyStats(stats);
+          }} />
           <FAQ />
         </div>
       </div>
