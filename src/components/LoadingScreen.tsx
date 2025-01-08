@@ -35,6 +35,31 @@ export const LoadingScreen = () => {
         AKVPN
       </div>
 
+      {/* Additional Horror Text */}
+      <div 
+        className={`
+          text-lg md:text-xl text-red-600 text-center mb-8
+          transition-all duration-1000 transform
+          ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}
+        `}
+        style={{
+          textShadow: '0 0 5px rgba(220, 38, 38, 0.8)'
+        }}
+      >
+        <p className="mb-4">Все ключи являются демонстрацией работы нашего VPN</p>
+        <p>
+          Для полного доступа приобретите VPN в нашем{' '}
+          <a 
+            href="https://t.me/akvpnn_bot" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-red-500 hover:text-red-400 underline decoration-wavy decoration-red-500/50 transition-colors"
+          >
+            Telegram боте
+          </a>
+        </p>
+      </div>
+
       {/* Loading Bar */}
       <div className="w-64 h-2 bg-gray-800 rounded-full overflow-hidden">
         <div 
