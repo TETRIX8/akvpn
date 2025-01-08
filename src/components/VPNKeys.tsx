@@ -9,10 +9,10 @@ interface VPNKeysProps {
 }
 
 const vpnKeys = [
-  "vless://e0f12697-b29f-4599-8644-020713a4658b@185.121.14.164:443?type=tcp&security=reality&pbk=ccWQdcjsEfVWzqn63rxJr20Dlr6YgZTGz4KvR0EJ4W4&fp=random&sni=google.com&sid=294e0954dd9c1d34&spx=%2F#akvpn",
-  "vless://56164655-0143-45d8-ab26-363cd11b2bb3@185.121.14.164:443?type=tcp&security=reality&pbk=ccWQdcjsEfVWzqn63rxJr20Dlr6YgZTGz4KvR0EJ4W4&fp=random&sni=google.com&sid=294e0954dd9c1d34&spx=%2F#akvpn1",
-  "vless://1266be15-3565-4527-9b7f-352419ff8eab@185.121.14.164:443?type=tcp&security=reality&pbk=ccWQdcjsEfVWzqn63rxJr20Dlr6YgZTGz4KvR0EJ4W4&fp=random&sni=google.com&sid=294e0954dd9c1d34&spx=%2F#akvpn2",
-  "vless://8544e020-4124-44a3-a966-898ee27eab93@185.121.14.164:443?type=tcp&security=reality&pbk=ccWQdcjsEfVWzqn63rxJr20Dlr6YgZTGz4KvR0EJ4W4&fp=random&sni=google.com&sid=294e0954dd9c1d34&spx=%2F#akvpn3",
+  "vless://852496b5-4714-4432-8167-eadc7dfb5a41@185.232.204.20:433?type=tcp&security=reality&fp=chrome&pbk=yd8PE8yDUhhVF8LR76B7yx2DhK7DsFf6LjOAXEqerkw&sni=7.jetsurfnetwork.ru&flow=xtls-rprx-vision&sid=445e6461&spx=%2F#Akvpn",
+  "vless://9b34db19-bb0f-4f89-9372-f860c4105ec0@185.232.204.20:433?type=tcp&security=reality&fp=chrome&pbk=yd8PE8yDUhhVF8LR76B7yx2DhK7DsFf6LjOAXEqerkw&sni=7.jetsurfnetwork.ru&flow=xtls-rprx-vision&sid=445e6461&spx=%2F#akvpn2",
+  "vless://6fcb2d48-7499-4b86-9120-8dfb2297a098@185.232.204.20:433?type=tcp&security=reality&fp=chrome&pbk=yd8PE8yDUhhVF8LR76B7yx2DhK7DsFf6LjOAXEqerkw&sni=7.jetsurfnetwork.ru&flow=xtls-rprx-vision&sid=445e6461&spx=%2F#akvpn3",
+  "vless://875f28ab-5e55-486b-abd3-0ce25a056ef3@185.232.204.20:433?type=tcp&security=reality&fp=chrome&pbk=yd8PE8yDUhhVF8LR76B7yx2DhK7DsFf6LjOAXEqerkw&sni=7.jetsurfnetwork.ru&flow=xtls-rprx-vision&sid=445e6461&spx=%2F#akvpn4"
 ];
 
 export const VPNKeys = ({ onKeySelect }: VPNKeysProps) => {
