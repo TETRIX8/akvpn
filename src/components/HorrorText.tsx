@@ -21,16 +21,18 @@ export const HorrorText = () => {
           animation: 'drip 2s ease-in-out forwards'
         }}
       >
-        <style jsx>{`
-          @keyframes drip {
-            0% {
-              clip-path: inset(0 0 100% 0);
+        <style>
+          {`
+            @keyframes drip {
+              0% {
+                clip-path: inset(0 0 100% 0);
+              }
+              100% {
+                clip-path: inset(0 0 0 0);
+              }
             }
-            100% {
-              clip-path: inset(0 0 0 0);
-            }
-          }
-        `}</style>
+          `}
+        </style>
         <p className="mb-4 animate-fade-in" style={{ animationDelay: '0.5s' }}>
           Все ключи являются демонстрацией работы нашего VPN
         </p>
