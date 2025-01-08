@@ -4,12 +4,19 @@ import { SetupInstructions } from "@/components/SetupInstructions";
 import { VPNKeys } from "@/components/VPNKeys";
 import { FAQ } from "@/components/FAQ";
 import { HorrorText } from "@/components/HorrorText";
+import { LoadingScreen } from "@/components/LoadingScreen";
 
 const Index = () => {
   const [visitors, setVisitors] = useState(0);
   const [keyStats, setKeyStats] = useState<Record<string, number>>({});
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    // Show loading screen for 5 seconds
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 5000);
+
     // Get visitor count from localStorage or initialize
     const storedVisitors = parseInt(localStorage.getItem('visitorCount') || '0');
     setVisitors(storedVisitors + 1);
@@ -18,7 +25,13 @@ const Index = () => {
     // Get key selection stats
     const stats = JSON.parse(localStorage.getItem('keyStats') || '{}');
     setKeyStats(stats);
+
+    return () => clearTimeout(timer);
   }, []);
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
 
   return (
     <div className="min-h-screen bg-vpn-dark relative overflow-hidden">
