@@ -78,6 +78,10 @@ export default {
           "0%": { transform: "translateY(100%)", opacity: "0" },
           "100%": { transform: "translateY(0)", opacity: "1" },
         },
+        drip: {
+          "0%": { transform: "scaleY(0)", opacity: "0" },
+          "100%": { transform: "scaleY(1)", opacity: "1" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -85,6 +89,10 @@ export default {
         "fade-in": "fade-in 0.5s ease-out",
         float: "float 3s ease-in-out infinite",
         "text-reveal": "text-reveal 0.5s ease-out forwards",
+        "drip": "drip 1s ease-in-out forwards",
+      },
+      fontFamily: {
+        horror: ["Nosifer", "cursive"],
       },
     },
   },

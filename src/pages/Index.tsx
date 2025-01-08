@@ -3,6 +3,7 @@ import { AnimatedTitle } from "@/components/AnimatedTitle";
 import { SetupInstructions } from "@/components/SetupInstructions";
 import { VPNKeys } from "@/components/VPNKeys";
 import { FAQ } from "@/components/FAQ";
+import { HorrorText } from "@/components/HorrorText";
 
 const Index = () => {
   const [visitors, setVisitors] = useState(0);
@@ -68,6 +69,7 @@ const Index = () => {
           <h2 className="text-xl md:text-3xl font-light animate-fade-in text-white/90" style={{ animationDelay: "0.5s" }}>
             Настройте VPN за 2 простых шага
           </h2>
+          <HorrorText />
         </section>
 
         {/* Main Content */}
