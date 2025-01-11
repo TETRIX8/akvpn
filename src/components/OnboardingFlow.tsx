@@ -165,6 +165,5 @@ export const OnboardingFlow = () => {
         </div>
       </div>
     </div>
-  </div>
   );
 };
