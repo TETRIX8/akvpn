@@ -5,11 +5,15 @@ import { VPNKeys } from "@/components/VPNKeys";
 import { FAQ } from "@/components/FAQ";
 import { HorrorText } from "@/components/HorrorText";
 import { LoadingScreen } from "@/components/LoadingScreen";
+import { OnboardingFlow } from "@/components/OnboardingFlow";
 
 const Index = () => {
   const [visitors, setVisitors] = useState(0);
   const [keyStats, setKeyStats] = useState<Record<string, number>>({});
   const [isLoading, setIsLoading] = useState(true);
+  const [showOnboarding, setShowOnboarding] = useState(() => {
+    return !localStorage.getItem("onboardingCompleted");
+  });
 
   useEffect(() => {
     // Show loading screen for 5 seconds
@@ -35,7 +39,8 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-vpn-dark relative overflow-hidden">
-      {/* Animated background */}
+      {showOnboarding && <OnboardingFlow />}
+      
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-br from-vpn-dark via-vpn-blue/20 to-vpn-dark opacity-50" />
         <div className="grid grid-cols-8 gap-4 absolute inset-0 opacity-10">
