@@ -6,14 +6,13 @@ import { FAQ } from "@/components/FAQ";
 import { HorrorText } from "@/components/HorrorText";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { OnboardingFlow } from "@/components/OnboardingFlow";
+import { Button } from "@/components/ui/button";
 
 const Index = () => {
   const [visitors, setVisitors] = useState(0);
   const [keyStats, setKeyStats] = useState<Record<string, number>>({});
   const [isLoading, setIsLoading] = useState(true);
-  const [showOnboarding, setShowOnboarding] = useState(() => {
-    return !localStorage.getItem("onboardingCompleted");
-  });
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
   useEffect(() => {
     // Show loading screen for 5 seconds
@@ -32,6 +31,12 @@ const Index = () => {
 
     return () => clearTimeout(timer);
   }, []);
+
+  const handleStartSetup = () => {
+    localStorage.removeItem('onboardingStep'); // Reset onboarding progress
+    localStorage.removeItem('onboardingCompleted');
+    setShowOnboarding(true);
+  };
 
   if (isLoading) {
     return <LoadingScreen />;
@@ -88,6 +93,18 @@ const Index = () => {
             Настройте VPN за 2 простых шага
           </h2>
           <HorrorText />
+          <div className="flex justify-center mt-8">
+            <Button
+              onClick={handleStartSetup}
+              className="bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-full animate-pulse text-lg"
+              style={{
+                textShadow: '0 0 10px rgba(220, 38, 38, 0.8)',
+                boxShadow: '0 0 15px rgba(220, 38, 38, 0.4)'
+              }}
+            >
+              Начать настройку
+            </Button>
+          </div>
         </section>
 
         {/* Main Content */}
