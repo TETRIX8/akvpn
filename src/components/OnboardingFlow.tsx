@@ -3,8 +3,34 @@ import { Button } from "./ui/button";
 import { VPNKeys } from "./VPNKeys";
 import { SetupInstructions } from "./SetupInstructions";
 import { toast } from "./ui/use-toast";
+import { Smartphone, Laptop, Monitor } from "lucide-react";
+import { Card } from "./ui/card";
 
 type Step = "welcome" | "install" | "key-selection" | "connection" | "completed";
+
+interface PlatformLink {
+  name: string;
+  icon: React.ReactNode;
+  app: string;
+}
+
+const platforms: PlatformLink[] = [
+  {
+    name: "iOS и macOS",
+    icon: <Laptop className="w-5 h-5" />,
+    app: "streisand",
+  },
+  {
+    name: "Android",
+    icon: <Smartphone className="w-5 h-5" />,
+    app: "v2raytun",
+  },
+  {
+    name: "Windows",
+    icon: <Monitor className="w-5 h-5" />,
+    app: "hiddify",
+  },
+];
 
 export const OnboardingFlow = () => {
   const [currentStep, setCurrentStep] = useState<Step>(() => {
@@ -20,6 +46,21 @@ export const OnboardingFlow = () => {
   const handleKeySelect = (key: string) => {
     setHasSelectedKey(true);
     localStorage.setItem('selectedVPNKey', key);
+  };
+
+  const handleConnect = (app: string) => {
+    const selectedKey = localStorage.getItem('selectedVPNKey');
+    if (!selectedKey) {
+      toast({
+        title: "Ошибка",
+        description: "Пожалуйста, выберите ключ перед подключением",
+        variant: "destructive",
+      });
+      return;
+    }
+    const encodedKey = encodeURIComponent(selectedKey);
+    const url = `https://ragimov700.ru/redirect/?app=${app}&config_url=${encodedKey}`;
+    window.open(url, "_blank");
   };
 
   const handleNextStep = () => {
@@ -124,15 +165,30 @@ export const OnboardingFlow = () => {
           </div>
         )}
 
-        {currentStep === "connection" && (
+        {currentStep === "connection" && hasSelectedKey && (
           <div className="space-y-6 animate-fade-in">
             <h2 className="text-2xl font-horror text-red-600 text-center mb-6"
                 style={{ textShadow: '0 0 10px rgba(220, 38, 38, 0.8)' }}>
-              Шаг 3: Подключение
+              Шаг 2: Подключение
             </h2>
-            <p className="text-white/80 text-center">
-              Нажмите кнопку "Подключиться" в приложении
-            </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {platforms.map((platform) => (
+                <Card key={platform.name} className="p-4 bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300">
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2 text-white">
+                      {platform.icon}
+                      <h3 className="font-semibold">{platform.name}</h3>
+                    </div>
+                    <Button
+                      onClick={() => handleConnect(platform.app)}
+                      className="w-full bg-vpn-blue hover:bg-vpn-blue/90"
+                    >
+                      Подключиться
+                    </Button>
+                  </div>
+                </Card>
+              ))}
+            </div>
             <div className="flex justify-center">
               <Button
                 onClick={handleNextStep}
