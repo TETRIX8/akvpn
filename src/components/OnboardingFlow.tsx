@@ -169,7 +169,7 @@ export const OnboardingFlow = () => {
           <div className="space-y-6 animate-fade-in">
             <h2 className="text-2xl font-horror text-red-600 text-center mb-6"
                 style={{ textShadow: '0 0 10px rgba(220, 38, 38, 0.8)' }}>
-              Шаг 2: Подключение
+              Шаг 3: Подключение
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {platforms.map((platform) => (
