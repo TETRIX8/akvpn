@@ -29,8 +29,9 @@ const platforms: PlatformLink[] = [
 ];
 
 export const SetupInstructions = () => {
+  const selectedKey = localStorage.getItem('selectedVPNKey');
+
   const handleConnect = (app: string) => {
-    const selectedKey = localStorage.getItem('selectedVPNKey');
     if (!selectedKey) {
       toast({
         title: "Ошибка",
@@ -68,23 +69,25 @@ export const SetupInstructions = () => {
         </p>
       </section>
 
-      <section className="space-y-4">
-        <h2 className="text-2xl font-bold text-center text-white">Шаг 2: Подключение</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {platforms.map((platform) => (
-            <Card key={platform.name} className="p-4 bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300">
-              <h3 className="font-semibold mb-4 text-white">{platform.name}</h3>
-              <Button
-                className="w-full bg-vpn-blue hover:bg-vpn-blue/90"
-                onClick={() => handleConnect(platform.app)}
-              >
-                <ArrowRight className="mr-2 h-4 w-4" />
-                Подключиться
-              </Button>
-            </Card>
-          ))}
-        </div>
-      </section>
+      {selectedKey && (
+        <section className="space-y-4">
+          <h2 className="text-2xl font-bold text-center text-white">Шаг 2: Подключение</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {platforms.map((platform) => (
+              <Card key={platform.name} className="p-4 bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300">
+                <h3 className="font-semibold mb-4 text-white">{platform.name}</h3>
+                <Button
+                  className="w-full bg-vpn-blue hover:bg-vpn-blue/90"
+                  onClick={() => handleConnect(platform.app)}
+                >
+                  <ArrowRight className="mr-2 h-4 w-4" />
+                  Подключиться
+                </Button>
+              </Card>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 };
