@@ -21,67 +21,83 @@ export const LoadingScreen = () => {
 
   return (
     <div className="fixed inset-0 bg-vpn-dark flex flex-col items-center justify-center z-50">
-      {/* Horror Text */}
+      {/* Background Image */}
       <div 
-        className={`
-          text-4xl md:text-6xl text-red-600 font-horror mb-8
-          transition-all duration-1000 transform
-          ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}
-        `}
-        style={{
-          textShadow: '0 0 10px rgba(220, 38, 38, 0.8), 0 0 20px rgba(220, 38, 38, 0.4)'
-        }}
-      >
-        AKVPN
-      </div>
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{ 
+          backgroundImage: 'url(/lovable-uploads/d30cc1ad-1163-4a42-b5fd-f609aa4d1cf1.png)',
+          backgroundSize: 'cover',
+          opacity: 0.3
+        }} 
+      />
+      
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-vpn-dark via-vpn-dark/90 to-vpn-dark opacity-90" />
 
-      {/* Additional Horror Text */}
-      <div 
-        className={`
-          text-lg md:text-xl text-red-600 text-center mb-8
-          transition-all duration-1000 transform
-          ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}
-        `}
-        style={{
-          textShadow: '0 0 5px rgba(220, 38, 38, 0.8)'
-        }}
-      >
-        <p className="mb-4">Все ключи являются демонстрацией работы нашего VPN</p>
-        <p>
-          Для полного доступа приобретите VPN в нашем{' '}
-          <a 
-            href="https://t.me/akvpnn_bot" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="text-red-500 hover:text-red-400 underline decoration-wavy decoration-red-500/50 transition-colors"
-          >
-            Telegram боте
-          </a>
-        </p>
-      </div>
-
-      {/* Loading Bar */}
-      <div className="w-64 h-2 bg-gray-800 rounded-full overflow-hidden">
+      {/* Content */}
+      <div className="relative z-10">
+        {/* Horror Text */}
         <div 
-          className="h-full bg-red-600 transition-all duration-300 ease-out"
-          style={{ 
-            width: `${progress}%`,
-            boxShadow: '0 0 10px rgba(220, 38, 38, 0.8)'
+          className={`
+            text-4xl md:text-6xl text-red-600 font-horror mb-8
+            transition-all duration-1000 transform
+            ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}
+          `}
+          style={{
+            textShadow: '0 0 10px rgba(220, 38, 38, 0.8), 0 0 20px rgba(220, 38, 38, 0.4)'
           }}
-        />
-      </div>
+        >
+          AKVPN
+        </div>
 
-      {/* Loading Text */}
-      <div 
-        className={`
-          mt-4 text-lg text-red-600 font-horror
-          animate-pulse
-        `}
-        style={{
-          textShadow: '0 0 5px rgba(220, 38, 38, 0.8)'
-        }}
-      >
-        Loading...
+        {/* Additional Horror Text */}
+        <div 
+          className={`
+            text-lg md:text-xl text-red-600 text-center mb-8
+            transition-all duration-1000 transform
+            ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}
+          `}
+          style={{
+            textShadow: '0 0 5px rgba(220, 38, 38, 0.8)'
+          }}
+        >
+          <p className="mb-4">Все ключи являются демонстрацией работы нашего VPN</p>
+          <p>
+            Для полного доступа приобретите VPN в нашем{' '}
+            <a 
+              href="https://t.me/akvpnn_bot" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-red-500 hover:text-red-400 underline decoration-wavy decoration-red-500/50 transition-colors"
+            >
+              Telegram боте
+            </a>
+          </p>
+        </div>
+
+        {/* Loading Bar */}
+        <div className="w-64 h-2 bg-gray-800 rounded-full overflow-hidden">
+          <div 
+            className="h-full bg-red-600 transition-all duration-300 ease-out"
+            style={{ 
+              width: `${progress}%`,
+              boxShadow: '0 0 10px rgba(220, 38, 38, 0.8)'
+            }}
+          />
+        </div>
+
+        {/* Loading Text */}
+        <div 
+          className={`
+            mt-4 text-lg text-red-600 font-horror
+            animate-pulse
+          `}
+          style={{
+            textShadow: '0 0 5px rgba(220, 38, 38, 0.8)'
+          }}
+        >
+          Loading...
+        </div>
       </div>
     </div>
   );
