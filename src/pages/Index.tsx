@@ -21,6 +21,7 @@ const Index = () => {
   const [keyStats, setKeyStats] = useState<Record<string, number>>({});
   const [isLoading, setIsLoading] = useState(true);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
   const isMobile = useIsMobile();
 
   useEffect(() => {
@@ -42,6 +43,9 @@ const Index = () => {
     localStorage.removeItem('onboardingStep');
     localStorage.removeItem('onboardingCompleted');
     setShowOnboarding(true);
+    if (isMobile) {
+      setIsSheetOpen(true);
+    }
   };
 
   if (isLoading) {
@@ -98,15 +102,15 @@ const Index = () => {
           <HorrorText />
           <div className="flex justify-center mt-8">
             {isMobile ? (
-              <Sheet>
-                <SheetTrigger>
+              <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+                <SheetTrigger asChild>
                   <Button
-                    onClick={handleStartSetup}
                     className="bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-full animate-pulse text-lg"
                     style={{
                       textShadow: '0 0 10px rgba(220, 38, 38, 0.8)',
                       boxShadow: '0 0 15px rgba(220, 38, 38, 0.4)'
                     }}
+                    onClick={handleStartSetup}
                   >
                     Начать настройку
                   </Button>
