@@ -57,22 +57,21 @@ const Index = () => {
       {!isMobile && showOnboarding && <OnboardingFlow />}
       
       <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-vpn-dark via-vpn-blue/20 to-vpn-dark opacity-50" />
-        <div className="grid grid-cols-8 gap-4 absolute inset-0 opacity-10">
-          {Array.from({ length: 64 }).map((_, i) => (
-            <div
-              key={i}
-              className="w-full h-full bg-vpn-blue/30 animate-pulse"
-              style={{
-                animationDelay: `${Math.random() * 2}s`,
-                animationDuration: `${Math.random() * 3 + 2}s`,
-              }}
-            />
-          ))}
-        </div>
+        {/* Background Image */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ 
+            backgroundImage: 'url(/lovable-uploads/f086c916-cb2f-4633-88ad-f94621e7f7ba.png)',
+            backgroundSize: 'cover',
+            opacity: 0.4
+          }} 
+        />
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-vpn-dark via-vpn-blue/20 to-vpn-dark opacity-80" />
       </div>
 
-      <div className="relative z-10 w-full bg-white/5 backdrop-blur-sm border-b border-white/10">
+      {/* Stats Bar */}
+      <div className="relative z-10 w-full bg-black/40 backdrop-blur-sm border-b border-white/10">
         <div className="container mx-auto px-4 py-2">
           <div className="flex flex-wrap justify-center md:justify-between items-center gap-4 text-sm text-white/80">
             <div className="flex items-center gap-4">
@@ -93,6 +92,7 @@ const Index = () => {
         </div>
       </div>
 
+      {/* Main Content */}
       <div className="container mx-auto px-4 py-8 md:py-12 relative z-10">
         <section className="text-center space-y-4 mb-12">
           <AnimatedTitle />
