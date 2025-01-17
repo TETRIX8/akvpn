@@ -7,25 +7,31 @@ import { HorrorText } from "@/components/HorrorText";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { OnboardingFlow } from "@/components/OnboardingFlow";
 import { Button } from "@/components/ui/button";
+import { useIsMobile } from "@/hooks/use-mobile";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 const Index = () => {
   const [visitors, setVisitors] = useState(0);
   const [keyStats, setKeyStats] = useState<Record<string, number>>({});
   const [isLoading, setIsLoading] = useState(true);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
-    // Show loading screen for 5 seconds
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 5000);
 
-    // Get visitor count from localStorage or initialize
     const storedVisitors = parseInt(localStorage.getItem('visitorCount') || '0');
     setVisitors(storedVisitors + 1);
     localStorage.setItem('visitorCount', (storedVisitors + 1).toString());
 
-    // Get key selection stats
     const stats = JSON.parse(localStorage.getItem('keyStats') || '{}');
     setKeyStats(stats);
 
@@ -33,7 +39,7 @@ const Index = () => {
   }, []);
 
   const handleStartSetup = () => {
-    localStorage.removeItem('onboardingStep'); // Reset onboarding progress
+    localStorage.removeItem('onboardingStep');
     localStorage.removeItem('onboardingCompleted');
     setShowOnboarding(true);
   };
@@ -42,9 +48,22 @@ const Index = () => {
     return <LoadingScreen />;
   }
 
+  const StartButton = () => (
+    <Button
+      onClick={handleStartSetup}
+      className="bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-full animate-pulse text-lg"
+      style={{
+        textShadow: '0 0 10px rgba(220, 38, 38, 0.8)',
+        boxShadow: '0 0 15px rgba(220, 38, 38, 0.4)'
+      }}
+    >
+      Начать настройку
+    </Button>
+  );
+
   return (
     <div className="min-h-screen bg-vpn-dark relative overflow-hidden">
-      {showOnboarding && <OnboardingFlow />}
+      {!isMobile && showOnboarding && <OnboardingFlow />}
       
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-br from-vpn-dark via-vpn-blue/20 to-vpn-dark opacity-50" />
@@ -62,7 +81,6 @@ const Index = () => {
         </div>
       </div>
 
-      {/* Stats Bar */}
       <div className="relative z-10 w-full bg-white/5 backdrop-blur-sm border-b border-white/10">
         <div className="container mx-auto px-4 py-2">
           <div className="flex flex-wrap justify-center md:justify-between items-center gap-4 text-sm text-white/80">
@@ -84,9 +102,7 @@ const Index = () => {
         </div>
       </div>
 
-      {/* Content */}
       <div className="container mx-auto px-4 py-8 md:py-12 relative z-10">
-        {/* Hero Section */}
         <section className="text-center space-y-4 mb-12">
           <AnimatedTitle />
           <h2 className="text-xl md:text-3xl font-light animate-fade-in text-white/90" style={{ animationDelay: "0.5s" }}>
@@ -94,20 +110,26 @@ const Index = () => {
           </h2>
           <HorrorText />
           <div className="flex justify-center mt-8">
-            <Button
-              onClick={handleStartSetup}
-              className="bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-full animate-pulse text-lg"
-              style={{
-                textShadow: '0 0 10px rgba(220, 38, 38, 0.8)',
-                boxShadow: '0 0 15px rgba(220, 38, 38, 0.4)'
-              }}
-            >
-              Начать настройку
-            </Button>
+            {isMobile ? (
+              <Sheet>
+                <SheetTrigger asChild>
+                  <StartButton />
+                </SheetTrigger>
+                <SheetContent side="bottom" className="h-[90vh] bg-vpn-dark border-t border-white/10">
+                  <SheetHeader>
+                    <SheetTitle className="text-white">Настройка VPN</SheetTitle>
+                  </SheetHeader>
+                  <div className="mt-6">
+                    <OnboardingFlow />
+                  </div>
+                </SheetContent>
+              </Sheet>
+            ) : (
+              <StartButton />
+            )}
           </div>
         </section>
 
-        {/* Main Content */}
         <div className="space-y-12 max-w-4xl mx-auto">
           <SetupInstructions />
           <VPNKeys onKeySelect={(key) => {
@@ -117,7 +139,6 @@ const Index = () => {
             setKeyStats(stats);
           }} />
 
-          {/* VIP Section */}
           <section className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-vpn-blue/20 to-purple-600/20 p-8 border border-white/10">
             <div className="absolute inset-0 bg-vpn-dark/40 backdrop-blur-sm" />
             <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
@@ -158,7 +179,6 @@ const Index = () => {
           <FAQ />
         </div>
 
-        {/* Developer Credit */}
         <footer className="mt-16 text-center space-y-4">
           <p className="text-white/80 text-sm">
             Разработано <span className="font-semibold text-vpn-blue">TETRIXUNO</span>
