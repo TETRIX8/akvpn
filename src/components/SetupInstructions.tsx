@@ -68,25 +68,6 @@ export const SetupInstructions = () => {
           После установки откройте приложение и нажмите 'Начать'
         </p>
       </section>
-      <div className="flex justify-center mt-6">
-        <Button
-          onClick={() => {
-            const currentStep = localStorage.getItem('onboardingStep');
-            if (currentStep === 'install') {
-              localStorage.setItem('onboardingStep', 'key-selection');
-              window.location.reload();
-            }
-          }}
-          className="bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-full animate-pulse"
-          style={{
-            textShadow: '0 0 10px rgba(220, 38, 38, 0.8)',
-            boxShadow: '0 0 15px rgba(220, 38, 38, 0.4)'
-          }}
-        >
-          <ArrowRight className="mr-2 h-4 w-4" />
-          Продолжить
-        </Button>
-      </div>
     </div>
   );
 };
