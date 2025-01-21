@@ -22,12 +22,27 @@ const Index = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [isFirstVisit, setIsFirstVisit] = useState(true);
   const isMobile = useIsMobile();
 
   useEffect(() => {
-    const timer = setTimeout(() => {
+    // Check if this is the first visit
+    const hasVisited = localStorage.getItem('hasVisited');
+    if (!hasVisited) {
+      setIsFirstVisit(true);
+      localStorage.setItem('hasVisited', 'true');
+      
+      // Show loading screen for 5 seconds on first visit
+      const timer = setTimeout(() => {
+        setIsFirstVisit(false);
+        setIsLoading(false);
+      }, 5000);
+      
+      return () => clearTimeout(timer);
+    } else {
+      setIsFirstVisit(false);
       setIsLoading(false);
-    }, 5000);
+    }
 
     const storedVisitors = parseInt(localStorage.getItem('visitorCount') || '0');
     setVisitors(storedVisitors + 1);
@@ -35,8 +50,6 @@ const Index = () => {
 
     const stats = JSON.parse(localStorage.getItem('keyStats') || '{}');
     setKeyStats(stats);
-
-    return () => clearTimeout(timer);
   }, []);
 
   const handleStartSetup = () => {
@@ -48,7 +61,7 @@ const Index = () => {
     }
   };
 
-  if (isLoading) {
+  if (isFirstVisit || isLoading) {
     return <LoadingScreen />;
   }
 
