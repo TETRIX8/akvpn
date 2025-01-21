@@ -8,10 +8,10 @@ export const HorrorText = () => {
   }, []);
 
   return (
-    <div className="my-8 relative">
+    <div className="my-4 md:my-8 relative px-4 md:px-0">
       <div 
         className={`
-          text-lg md:text-xl text-red-600 font-horror
+          text-base md:text-xl text-red-600 font-horror
           transition-all duration-1000 transform
           ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}
           animate-pulse
@@ -33,10 +33,10 @@ export const HorrorText = () => {
             }
           `}
         </style>
-        <p className="mb-4 animate-fade-in" style={{ animationDelay: '0.5s' }}>
+        <p className="mb-2 md:mb-4 animate-fade-in" style={{ animationDelay: '0.5s' }}>
           Все ключи являются демонстрацией работы нашего VPN
         </p>
-        <p className="animate-fade-in" style={{ animationDelay: '1.5s' }}>
+        <p className="animate-fade-in text-sm md:text-base" style={{ animationDelay: '1.5s' }}>
           Для полного доступа приобретите VPN в нашем{' '}
           <a 
             href="https://t.me/akvpnn_bot" 

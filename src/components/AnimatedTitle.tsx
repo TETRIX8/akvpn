@@ -4,7 +4,7 @@ export const AnimatedTitle = () => {
   const letters = "AKVPN".split("");
 
   return (
-    <h1 className="text-6xl font-bold mb-4 overflow-hidden">
+    <h1 className="text-4xl md:text-6xl font-bold mb-4 overflow-hidden">
       {letters.map((letter, index) => (
         <span
           key={index}

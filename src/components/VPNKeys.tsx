@@ -44,38 +44,38 @@ export const VPNKeys = ({ onKeySelect }: VPNKeysProps) => {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in backdrop-blur-lg bg-white/5 p-6 rounded-xl shadow-2xl border border-white/10">
-      <h2 className="text-2xl md:text-3xl font-bold mb-8 text-center text-white tracking-tight">
+    <div className="space-y-4 md:space-y-6 animate-fade-in backdrop-blur-lg bg-white/5 p-4 md:p-6 rounded-xl shadow-2xl border border-white/10">
+      <h2 className="text-xl md:text-3xl font-bold mb-4 md:mb-8 text-center text-white tracking-tight">
         Ключи VPN
       </h2>
-      <div className="grid gap-6">
+      <div className="grid gap-4 md:gap-6">
         {vpnKeys.map((key, index) => (
           <Card 
             key={index} 
             className={`
-              p-5 bg-gradient-to-r from-white/5 to-white/10 
+              p-3 md:p-5 bg-gradient-to-r from-white/5 to-white/10 
               backdrop-blur-md border-white/20 
               hover:bg-white/15 transition-all duration-300 
               transform hover:scale-[1.02] hover:shadow-lg
               rounded-xl
             `}
           >
-            <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
+            <div className="flex flex-col md:flex-row gap-3 md:gap-4 items-start md:items-center justify-between">
               <div className="flex-1 space-y-2 w-full md:w-auto">
-                <div className="flex flex-wrap items-center gap-3">
-                  <code className="text-xs md:text-sm text-white/90 font-mono bg-black/20 px-3 py-1.5 rounded-lg">
+                <div className="flex flex-wrap items-center gap-2 md:gap-3">
+                  <code className="text-[10px] md:text-sm text-white/90 font-mono bg-black/20 px-2 md:px-3 py-1 md:py-1.5 rounded-lg break-all">
                     {key.substring(0, 40)}...
                   </code>
-                  <span className="text-xs font-medium text-white/80 bg-vpn-blue/20 px-3 py-1.5 rounded-lg flex items-center gap-2">
-                    <div className="w-2 h-2 bg-vpn-blue rounded-full animate-pulse"></div>
+                  <span className="text-[10px] md:text-xs font-medium text-white/80 bg-vpn-blue/20 px-2 md:px-3 py-1 md:py-1.5 rounded-lg flex items-center gap-2">
+                    <div className="w-1.5 md:w-2 h-1.5 md:h-2 bg-vpn-blue rounded-full animate-pulse"></div>
                     {keyStats[key] || 0} выборов
                   </span>
                 </div>
               </div>
-              <div className="flex gap-3 w-full md:w-auto">
+              <div className="flex gap-2 md:gap-3 w-full md:w-auto">
                 {isChecking && selectedKey === key ? (
-                  <Button disabled className="w-full md:w-auto bg-white/20 backdrop-blur-sm">
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <Button disabled className="w-full md:w-auto bg-white/20 backdrop-blur-sm text-sm md:text-base">
+                    <Loader2 className="mr-2 h-3 md:h-4 w-3 md:w-4 animate-spin" />
                     Проверяем связь...
                   </Button>
                 ) : (
@@ -83,7 +83,7 @@ export const VPNKeys = ({ onKeySelect }: VPNKeysProps) => {
                     variant={selectedKey === key ? "default" : "outline"}
                     onClick={() => handleKeySelect(key)}
                     className={`
-                      w-full md:w-auto transition-all duration-300
+                      w-full md:w-auto transition-all duration-300 text-sm md:text-base
                       ${selectedKey === key 
                         ? 'bg-gradient-to-r from-vpn-blue to-vpn-blue/80 hover:from-vpn-blue/90 hover:to-vpn-blue/70 shadow-lg' 
                         : 'bg-white/10 hover:bg-white/20 border-white/20'}
@@ -91,7 +91,7 @@ export const VPNKeys = ({ onKeySelect }: VPNKeysProps) => {
                   >
                     {selectedKey === key ? (
                       <>
-                        <Check className="mr-2 h-4 w-4" />
+                        <Check className="mr-1 md:mr-2 h-3 md:h-4 w-3 md:w-4" />
                         Выбран
                       </>
                     ) : (
