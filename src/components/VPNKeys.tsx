@@ -33,6 +33,13 @@ export const VPNKeys = ({ onKeySelect }: VPNKeysProps) => {
     setIsChecking(false);
     localStorage.setItem('selectedVPNKey', key);
     onKeySelect?.(key);
+    
+    // Update stats
+    const stats = JSON.parse(localStorage.getItem('keyStats') || '{}');
+    stats[key] = (stats[key] || 0) + 1;
+    localStorage.setItem('keyStats', JSON.stringify(stats));
+    setKeyStats(stats);
+
     toast({
       title: "Ключ готов",
       description: (
@@ -41,6 +48,13 @@ export const VPNKeys = ({ onKeySelect }: VPNKeysProps) => {
         </div>
       ),
     });
+
+    // Automatically proceed to next step
+    const currentStep = localStorage.getItem('onboardingStep');
+    if (currentStep === 'key-selection') {
+      localStorage.setItem('onboardingStep', 'connection');
+      window.location.reload();
+    }
   };
 
   return (
