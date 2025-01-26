@@ -9,6 +9,8 @@ import { OnboardingFlow } from "@/components/OnboardingFlow";
 import { SupportForm } from "@/components/SupportForm";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Card } from "@/components/ui/card";
+import { Smartphone, Laptop, Monitor } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -17,6 +19,24 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
+const platforms = [
+  {
+    name: "iOS и macOS",
+    icon: <Laptop className="w-5 h-5" />,
+    app: "streisand",
+  },
+  {
+    name: "Android",
+    icon: <Smartphone className="w-5 h-5" />,
+    app: "v2raytun",
+  },
+  {
+    name: "Windows",
+    icon: <Monitor className="w-5 h-5" />,
+    app: "hiddify",
+  },
+];
+
 const Index = () => {
   const [visitors, setVisitors] = useState(0);
   const [keyStats, setKeyStats] = useState<Record<string, number>>({});
@@ -24,6 +44,7 @@ const Index = () => {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [isFirstVisit, setIsFirstVisit] = useState(true);
+  const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const isMobile = useIsMobile();
 
   useEffect(() => {
@@ -49,6 +70,11 @@ const Index = () => {
 
     const stats = JSON.parse(localStorage.getItem('keyStats') || '{}');
     setKeyStats(stats);
+
+    const savedKey = localStorage.getItem('selectedVPNKey');
+    if (savedKey) {
+      setSelectedKey(savedKey);
+    }
   }, []);
 
   const handleStartSetup = () => {
@@ -58,6 +84,20 @@ const Index = () => {
     if (isMobile) {
       setIsSheetOpen(true);
     }
+  };
+
+  const handleKeySelect = (key: string) => {
+    setSelectedKey(key);
+    localStorage.setItem('selectedVPNKey', key);
+  };
+
+  const handleConnect = (app: string) => {
+    if (!selectedKey) {
+      return;
+    }
+    const encodedKey = encodeURIComponent(selectedKey);
+    const url = `https://ragimov700.ru/redirect/?app=${app}&config_url=${encodedKey}`;
+    window.open(url, "_blank");
   };
 
   if (isFirstVisit || isLoading) {
@@ -104,7 +144,7 @@ const Index = () => {
       <div className="container mx-auto px-3 md:px-4 py-6 md:py-12 relative z-10">
         <section className="text-center space-y-4 mb-8 md:mb-12">
           <AnimatedTitle />
-          <h2 className="text-lg md:text-3xl font-light animate-fade-in text-white/90 px-2" style={{ animationDelay: "0.5s" }}>
+          <h2 className="text-lg md:text-3xl font-light animate-fade-in text-white/90 px-2">
             Настройте VPN за 2 простых шага
           </h2>
           <HorrorText />
@@ -149,49 +189,37 @@ const Index = () => {
 
         <div className="space-y-8 md:space-y-12 max-w-4xl mx-auto">
           <SetupInstructions />
-          <VPNKeys onKeySelect={(key) => {
-            const stats = JSON.parse(localStorage.getItem('keyStats') || '{}');
-            stats[key] = (stats[key] || 0) + 1;
-            localStorage.setItem('keyStats', JSON.stringify(stats));
-            setKeyStats(stats);
-          }} />
+          <VPNKeys onKeySelect={handleKeySelect} />
 
-          <section className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-vpn-blue/20 to-purple-600/20 p-4 md:p-8 border border-white/10">
-            <div className="absolute inset-0 bg-vpn-dark/40 backdrop-blur-sm" />
-            <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 md:gap-8">
-              <div className="text-center md:text-left space-y-4 flex-1">
-                <h3 className="text-xl md:text-3xl font-bold text-white">
-                  Получите VIP доступ
-                </h3>
-                <p className="text-white/80 text-base md:text-lg">
-                  Улучшенная скорость и стабильность работы, премиум сервера и приоритетная поддержка
-                </p>
-                <ul className="text-white/70 space-y-2 text-left list-disc list-inside text-sm md:text-base">
-                  <li>Максимальная скорость соединения</li>
-                  <li>Доступ к премиум серверам</li>
-                  <li>Приоритетная техническая поддержка</li>
-                  <li>Без ограничений трафика</li>
-                </ul>
+          {selectedKey && (
+            <section className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-vpn-blue/20 to-purple-600/20 p-4 md:p-8 border border-white/10 animate-fade-in">
+              <div className="absolute inset-0 bg-vpn-dark/40 backdrop-blur-sm" />
+              <div className="relative z-10">
+                <h2 className="text-2xl font-horror text-red-600 text-center mb-6"
+                    style={{ textShadow: '0 0 10px rgba(220, 38, 38, 0.8)' }}>
+                  Подключение
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {platforms.map((platform) => (
+                    <Card key={platform.name} className="p-4 bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300">
+                      <div className="space-y-4">
+                        <div className="flex items-center gap-2 text-white">
+                          {platform.icon}
+                          <h3 className="font-semibold">{platform.name}</h3>
+                        </div>
+                        <Button
+                          onClick={() => handleConnect(platform.app)}
+                          className="w-full bg-vpn-blue hover:bg-vpn-blue/90"
+                        >
+                          Подключиться
+                        </Button>
+                      </div>
+                    </Card>
+                  ))}
+                </div>
               </div>
-              <div className="flex-shrink-0">
-                <a
-                  href="https://t.me/akvpnn_bot"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 md:gap-3 px-4 md:px-6 py-2 md:py-3 bg-red-600 text-white rounded-full hover:bg-red-700 transition-all transform hover:scale-105 shadow-lg hover:shadow-red-500/25 animate-pulse text-sm md:text-base"
-                  style={{
-                    textShadow: '0 0 10px rgba(220, 38, 38, 0.8), 0 0 20px rgba(220, 38, 38, 0.4)',
-                    boxShadow: '0 0 15px rgba(220, 38, 38, 0.4)'
-                  }}
-                >
-                  <svg className="w-4 md:w-5 h-4 md:h-5" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.226-.461-1.901-.903-1.056-.692-1.653-1.123-2.678-1.799-1.185-.781-.417-1.21.258-1.911.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.139-5.062 3.345-.479.329-.913.489-1.302.481-.428-.008-1.252-.241-1.865-.44-.752-.244-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.831-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635.099-.002.321.023.465.178.12.13.145.309.164.433-.001.061.018.181.003.334z"/>
-                  </svg>
-                  Получить VIP доступ
-                </a>
-              </div>
-            </div>
-          </section>
+            </section>
+          )}
 
           <FAQ />
 
