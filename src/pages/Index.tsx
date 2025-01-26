@@ -6,6 +6,7 @@ import { FAQ } from "@/components/FAQ";
 import { HorrorText } from "@/components/HorrorText";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { OnboardingFlow } from "@/components/OnboardingFlow";
+import { SupportForm } from "@/components/SupportForm";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
@@ -193,6 +194,16 @@ const Index = () => {
           </section>
 
           <FAQ />
+
+          <section className="mt-12 space-y-6 max-w-4xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-bold text-center text-white">
+              Техническая поддержка
+            </h2>
+            <p className="text-white/80 text-center">
+              Если у вас возникли проблемы, напишите нам, и мы поможем вам решить их
+            </p>
+            <SupportForm />
+          </section>
         </div>
 
         <footer className="mt-12 md:mt-16 text-center space-y-3 md:space-y-4">
