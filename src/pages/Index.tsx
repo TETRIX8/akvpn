@@ -11,13 +11,7 @@ import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Card } from "@/components/ui/card";
 import { Smartphone, Laptop, Monitor } from "lucide-react";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { useToast } from "@/hooks/use-toast";
 
 const platforms = [
   {
@@ -42,10 +36,10 @@ const Index = () => {
   const [keyStats, setKeyStats] = useState<Record<string, number>>({});
   const [isLoading, setIsLoading] = useState(true);
   const [showOnboarding, setShowOnboarding] = useState(false);
-  const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [isFirstVisit, setIsFirstVisit] = useState(true);
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const isMobile = useIsMobile();
+  const { toast } = useToast();
 
   useEffect(() => {
     const hasVisited = localStorage.getItem('hasVisited');
@@ -75,16 +69,15 @@ const Index = () => {
     if (savedKey) {
       setSelectedKey(savedKey);
     }
-  }, []);
 
-  const handleStartSetup = () => {
-    localStorage.removeItem('onboardingStep');
-    localStorage.removeItem('onboardingCompleted');
-    setShowOnboarding(true);
-    if (isMobile) {
-      setIsSheetOpen(true);
-    }
-  };
+    // Show toast notification about new Outline connection
+    toast({
+      title: "Новый способ подключения!",
+      description: "Теперь доступно подключение через Outline VPN",
+      duration: 2000,
+      className: "animate-fade-in",
+    });
+  }, [toast]);
 
   const handleKeySelect = (key: string) => {
     setSelectedKey(key);
@@ -111,8 +104,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-vpn-dark relative overflow-hidden">
-      {!isMobile && showOnboarding && <OnboardingFlow />}
-      
       <div className="absolute inset-0 z-0">
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -153,43 +144,6 @@ const Index = () => {
             Настройте VPN за 2 простых шага
           </h2>
           <HorrorText />
-          <div className="flex justify-center mt-6 md:mt-8">
-            {isMobile ? (
-              <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-                <SheetTrigger asChild>
-                  <Button
-                    className="bg-red-600 hover:bg-red-700 text-white px-6 md:px-8 py-3 md:py-4 rounded-full animate-pulse text-base md:text-lg"
-                    style={{
-                      textShadow: '0 0 10px rgba(220, 38, 38, 0.8)',
-                      boxShadow: '0 0 15px rgba(220, 38, 38, 0.4)'
-                    }}
-                    onClick={handleStartSetup}
-                  >
-                    Начать настройку
-                  </Button>
-                </SheetTrigger>
-                <SheetContent side="bottom" className="h-[90vh] bg-vpn-dark border-t border-white/10">
-                  <SheetHeader>
-                    <SheetTitle className="text-white">Настройка VPN</SheetTitle>
-                  </SheetHeader>
-                  <div className="mt-6">
-                    <OnboardingFlow />
-                  </div>
-                </SheetContent>
-              </Sheet>
-            ) : (
-              <Button
-                onClick={handleStartSetup}
-                className="bg-red-600 hover:bg-red-700 text-white px-6 md:px-8 py-3 md:py-4 rounded-full animate-pulse text-base md:text-lg"
-                style={{
-                  textShadow: '0 0 10px rgba(220, 38, 38, 0.8)',
-                  boxShadow: '0 0 15px rgba(220, 38, 38, 0.4)'
-                }}
-              >
-                Начать настройку
-              </Button>
-            )}
-          </div>
         </section>
 
         <div className="space-y-8 md:space-y-12 max-w-4xl mx-auto">
