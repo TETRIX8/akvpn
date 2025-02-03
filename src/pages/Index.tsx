@@ -100,6 +100,11 @@ const Index = () => {
     window.open(url, "_blank");
   };
 
+  const handleOutlineConnect = () => {
+    const url = "http://77.238.225.250:43234/red?url=Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTpWNlg0RHE1VXA4MXZ0MEk4T2Q3QlNH@77.238.231.123:31546/?outline=1&name=🇳🇱Нидерланды%20-%20Ak";
+    window.open(url, "_blank");
+  };
+
   if (isFirstVisit || isLoading) {
     return <LoadingScreen />;
   }
@@ -233,6 +238,37 @@ const Index = () => {
             <SupportForm />
           </section>
         </div>
+
+        <section className="mt-12 space-y-6 max-w-4xl mx-auto">
+          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-500/20 to-teal-600/20 p-4 md:p-8 border border-white/10 animate-fade-in">
+            <div className="absolute inset-0 bg-vpn-dark/40 backdrop-blur-sm" />
+            <div className="relative z-10 space-y-6">
+              <div className="flex flex-col md:flex-row items-center gap-6">
+                <div className="w-24 h-24 md:w-32 md:h-32">
+                  <img 
+                    src="/lovable-uploads/6b411e54-6efa-4898-a7b8-67efaa004402.png" 
+                    alt="Outline VPN" 
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+                <div className="flex-1 text-center md:text-left">
+                  <h2 className="text-2xl md:text-3xl font-bold text-emerald-400 mb-2">
+                    Outline VPN
+                  </h2>
+                  <p className="text-white/80 mb-4">
+                    Новый способ подключения через Outline - быстрый и надежный VPN клиент
+                  </p>
+                  <Button
+                    onClick={handleOutlineConnect}
+                    className="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3 rounded-full transition-all duration-300 shadow-lg hover:shadow-emerald-500/25"
+                  >
+                    Подключиться через Outline
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
         <footer className="mt-12 md:mt-16 text-center space-y-3 md:space-y-4">
           <p className="text-white/80 text-xs md:text-sm">
