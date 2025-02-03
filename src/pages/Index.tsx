@@ -1,4 +1,10 @@
-import React, { useEffect, useState } from "react";
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useToast } from "@/components/ui/use-toast";
+import React, { useEffect, useState, useRef } from "react";
 import { AnimatedTitle } from "@/components/AnimatedTitle";
 import { SetupInstructions } from "@/components/SetupInstructions";
 import { VPNKeys } from "@/components/VPNKeys";
@@ -11,13 +17,6 @@ import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Card } from "@/components/ui/card";
 import { Smartphone, Laptop, Monitor } from "lucide-react";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
 
 const platforms = [
   {
@@ -46,8 +45,17 @@ const Index = () => {
   const [isFirstVisit, setIsFirstVisit] = useState(true);
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const isMobile = useIsMobile();
+  const { toast } = useToast();
+  const outlineSectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Show toast notification when component mounts
+    toast({
+      title: "Новый способ подключения!",
+      description: "Попробуйте Outline VPN - быстрый и надежный клиент",
+      duration: 2000,
+    });
+
     const hasVisited = localStorage.getItem('hasVisited');
     if (!hasVisited) {
       setIsFirstVisit(true);
@@ -103,6 +111,13 @@ const Index = () => {
   const handleOutlineConnect = () => {
     const url = "http://77.238.225.250:43234/red?url=Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTpWNlg0RHE1VXA4MXZ0MEk4T2Q3QlNH@77.238.231.123:31546/?outline=1&name=🇳🇱Нидерланды%20-%20Ak";
     window.open(url, "_blank");
+  };
+
+  const scrollToOutline = () => {
+    outlineSectionRef.current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center'
+    });
   };
 
   if (isFirstVisit || isLoading) {
@@ -192,59 +207,15 @@ const Index = () => {
           </div>
         </section>
 
-        <div className="space-y-8 md:space-y-12 max-w-4xl mx-auto">
-          <SetupInstructions />
-          <VPNKeys onKeySelect={handleKeySelect} />
-
-          {selectedKey && (
-            <section className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-vpn-blue/20 to-purple-600/20 p-4 md:p-8 border border-white/10 animate-fade-in">
-              <div className="absolute inset-0 bg-vpn-dark/40 backdrop-blur-sm" />
-              <div className="relative z-10">
-                <h2 className="text-2xl font-horror text-red-600 text-center mb-6"
-                    style={{ textShadow: '0 0 10px rgba(220, 38, 38, 0.8)' }}>
-                  Подключение
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {platforms.map((platform) => (
-                    <Card key={platform.name} className="p-4 bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300">
-                      <div className="space-y-4">
-                        <div className="flex items-center gap-2 text-white">
-                          {platform.icon}
-                          <h3 className="font-semibold">{platform.name}</h3>
-                        </div>
-                        <Button
-                          onClick={() => handleConnect(platform.app)}
-                          className="w-full bg-vpn-blue hover:bg-vpn-blue/90"
-                        >
-                          Подключиться
-                        </Button>
-                      </div>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-            </section>
-          )}
-
-          <FAQ />
-
-          <section className="mt-12 space-y-6 max-w-4xl mx-auto">
-            <h2 className="text-2xl md:text-3xl font-bold text-center text-white">
-              Техническая поддержка
-            </h2>
-            <p className="text-white/80 text-center">
-              Если у вас возникли проблемы, напишите нам, и мы поможем вам решить их
-            </p>
-            <SupportForm />
-          </section>
-        </div>
-
-        <section className="mt-12 space-y-6 max-w-4xl mx-auto">
+        <section 
+          ref={outlineSectionRef}
+          className="mt-12 space-y-6 max-w-4xl mx-auto"
+        >
           <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-500/20 to-teal-600/20 p-4 md:p-8 border border-white/10 animate-fade-in">
             <div className="absolute inset-0 bg-vpn-dark/40 backdrop-blur-sm" />
             <div className="relative z-10 space-y-6">
               <div className="flex flex-col md:flex-row items-center gap-6">
-                <div className="w-24 h-24 md:w-32 md:h-32">
+                <div className="w-24 h-24 md:w-32 md:h-32 animate-float">
                   <img 
                     src="/lovable-uploads/6b411e54-6efa-4898-a7b8-67efaa004402.png" 
                     alt="Outline VPN" 
@@ -252,15 +223,15 @@ const Index = () => {
                   />
                 </div>
                 <div className="flex-1 text-center md:text-left">
-                  <h2 className="text-2xl md:text-3xl font-bold text-emerald-400 mb-2">
+                  <h2 className="text-2xl md:text-3xl font-bold text-emerald-400 mb-2 animate-text-reveal">
                     Outline VPN
                   </h2>
-                  <p className="text-white/80 mb-4">
+                  <p className="text-white/80 mb-4 animate-fade-in">
                     Новый способ подключения через Outline - быстрый и надежный VPN клиент
                   </p>
                   <Button
                     onClick={handleOutlineConnect}
-                    className="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3 rounded-full transition-all duration-300 shadow-lg hover:shadow-emerald-500/25"
+                    className="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3 rounded-full transition-all duration-300 shadow-lg hover:shadow-emerald-500/25 animate-fade-in"
                   >
                     Подключиться через Outline
                   </Button>
@@ -268,6 +239,18 @@ const Index = () => {
               </div>
             </div>
           </div>
+        </section>
+
+        <FAQ />
+
+        <section className="mt-12 space-y-6 max-w-4xl mx-auto">
+          <h2 className="text-2xl md:text-3xl font-bold text-center text-white">
+            Техническая поддержка
+          </h2>
+          <p className="text-white/80 text-center">
+            Если у вас возникли проблемы, напишите нам, и мы поможем вам решить их
+          </p>
+          <SupportForm />
         </section>
 
         <footer className="mt-12 md:mt-16 text-center space-y-3 md:space-y-4">
