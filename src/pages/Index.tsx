@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AnimatedTitle } from "@/components/AnimatedTitle";
 import { SetupInstructions } from "@/components/SetupInstructions";
 import { VPNKeys } from "@/components/VPNKeys";
@@ -180,21 +180,7 @@ const Index = () => {
             </section>
           )}
 
-          <FAQ />
-
-          <section className="mt-12 space-y-6 max-w-4xl mx-auto">
-            <h2 className="text-2xl md:text-3xl font-bold text-center text-white">
-              Техническая поддержка
-            </h2>
-            <p className="text-white/80 text-center">
-              Если у вас возникли проблемы, напишите нам, и мы поможем вам решить их
-            </p>
-            <SupportForm />
-          </section>
-        </div>
-
-        <section className="mt-12 space-y-6 max-w-4xl mx-auto">
-          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-500/20 to-teal-600/20 p-4 md:p-8 border border-white/10 animate-fade-in">
+          <section className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-500/20 to-teal-600/20 p-4 md:p-8 border border-white/10 animate-fade-in">
             <div className="absolute inset-0 bg-vpn-dark/40 backdrop-blur-sm" />
             <div className="relative z-10 space-y-6">
               <div className="flex flex-col md:flex-row items-center gap-6">
@@ -221,8 +207,20 @@ const Index = () => {
                 </div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
+
+          <FAQ />
+
+          <section className="mt-12 space-y-6 max-w-4xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-bold text-center text-white">
+              Техническая поддержка
+            </h2>
+            <p className="text-white/80 text-center">
+              Если у вас возникли проблемы, напишите нам, и мы поможем вам решить их
+            </p>
+            <SupportForm />
+          </section>
+        </div>
 
         <footer className="mt-12 md:mt-16 text-center space-y-3 md:space-y-4">
           <p className="text-white/80 text-xs md:text-sm">
