@@ -1,10 +1,8 @@
-
 import React, { useState, useEffect } from "react";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
-import { Loader2, Check, Lock } from "lucide-react";
+import { Loader2, Check } from "lucide-react";
 import { toast } from "./ui/use-toast";
-import { Alert, AlertDescription } from "./ui/alert";
 
 interface VPNKeysProps {
   onKeySelect?: (key: string) => void;
@@ -21,27 +19,13 @@ export const VPNKeys = ({ onKeySelect }: VPNKeysProps) => {
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [isChecking, setIsChecking] = useState(false);
   const [keyStats, setKeyStats] = useState<Record<string, number>>({});
-  const [hasAccess, setHasAccess] = useState(false);
 
   useEffect(() => {
     const stats = JSON.parse(localStorage.getItem('keyStats') || '{}');
     setKeyStats(stats);
-    
-    // Проверяем доступ на основе количества рефералов
-    const hasVPNAccess = JSON.parse(localStorage.getItem('hasVPNAccess') || 'false');
-    setHasAccess(hasVPNAccess);
   }, []);
 
   const handleKeySelect = async (key: string) => {
-    if (!hasAccess) {
-      toast({
-        title: "Доступ ограничен",
-        description: "Пригласите 3 пользователей, чтобы получить доступ к VPN",
-        variant: "destructive",
-      });
-      return;
-    }
-
     setSelectedKey(key);
     setIsChecking(true);
     await new Promise((resolve) => setTimeout(resolve, 1500));
@@ -58,47 +42,6 @@ export const VPNKeys = ({ onKeySelect }: VPNKeysProps) => {
       ),
     });
   };
-
-  if (!hasAccess) {
-    return (
-      <div className="space-y-4 md:space-y-6 animate-fade-in backdrop-blur-lg bg-white/5 p-4 md:p-6 rounded-xl shadow-2xl border border-white/10">
-        <Alert className="bg-ramadan-purple/10 border-ramadan-purple text-ramadan-purple">
-          <AlertDescription className="flex items-center gap-2">
-            <Lock className="h-4 w-4" />
-            Пригласите 3 пользователей, чтобы получить доступ к VPN ключам
-          </AlertDescription>
-        </Alert>
-
-        <div className="grid gap-4 md:gap-6">
-          {vpnKeys.map((key, index) => (
-            <Card 
-              key={index} 
-              className="p-3 md:p-5 bg-gradient-to-r from-white/5 to-white/10 
-                backdrop-blur-md border-white/20 opacity-50"
-            >
-              <div className="flex flex-col md:flex-row gap-3 md:gap-4 items-start md:items-center justify-between">
-                <div className="flex-1 space-y-2 w-full md:w-auto">
-                  <div className="flex flex-wrap items-center gap-2 md:gap-3">
-                    <code className="text-[10px] md:text-sm text-white/90 font-mono bg-black/20 px-2 md:px-3 py-1 md:py-1.5 rounded-lg break-all">
-                      {key.substring(0, 40)}...
-                    </code>
-                  </div>
-                </div>
-                <Button 
-                  disabled
-                  variant="outline"
-                  className="w-full md:w-auto bg-white/10 border-white/20 text-white/50"
-                >
-                  <Lock className="mr-2 h-4 w-4" />
-                  Заблокировано
-                </Button>
-              </div>
-            </Card>
-          ))}
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-4 md:space-y-6 animate-fade-in backdrop-blur-lg bg-white/5 p-4 md:p-6 rounded-xl shadow-2xl border border-white/10">

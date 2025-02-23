@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -28,12 +27,6 @@ export default {
         vpn: {
           blue: "#0EA5E9",
           dark: "#1A1F2C",
-        },
-        ramadan: {
-          gold: "#FFD700",
-          emerald: "#50C878",
-          purple: "#8B5CF6",
-          crimson: "#DC143C"
         },
         primary: {
           DEFAULT: "hsl(var(--primary))",
@@ -89,14 +82,6 @@ export default {
           "0%": { transform: "scaleY(0)", opacity: "0" },
           "100%": { transform: "scaleY(1)", opacity: "1" },
         },
-        shimmer: {
-          "0%": { backgroundPosition: "200% 0" },
-          "100%": { backgroundPosition: "-200% 0" }
-        },
-        glow: {
-          "0%, 100%": { opacity: "1" },
-          "50%": { opacity: "0.5" }
-        }
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -104,15 +89,10 @@ export default {
         "fade-in": "fade-in 0.5s ease-out",
         float: "float 3s ease-in-out infinite",
         "text-reveal": "text-reveal 0.5s ease-out forwards",
-        drip: "drip 1s ease-in-out forwards",
-        shimmer: "shimmer 3s linear infinite",
-        glow: "glow 2s ease-in-out infinite"
+        "drip": "drip 1s ease-in-out forwards",
       },
       fontFamily: {
         horror: ["Nosifer", "cursive"],
-      },
-      backgroundImage: {
-        'ramadan-pattern': "url('data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%239C92AC' fill-opacity='0.05' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E')",
       },
     },
   },

@@ -10,9 +10,8 @@ import { SupportForm } from "@/components/SupportForm";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Card } from "@/components/ui/card";
-import { Smartphone, Laptop, Monitor, Share2, Link as LinkIcon } from "lucide-react";
+import { Smartphone, Laptop, Monitor } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { ReferralSystem } from "@/components/ReferralSystem";
 
 const platforms = [
   {
@@ -39,7 +38,6 @@ const Index = () => {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [isFirstVisit, setIsFirstVisit] = useState(true);
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
-  const [referralCode, setReferralCode] = useState("");
   const isMobile = useIsMobile();
   const { toast } = useToast();
 
@@ -72,10 +70,7 @@ const Index = () => {
       setSelectedKey(savedKey);
     }
 
-    const savedReferralCode = localStorage.getItem('referralCode') || Math.random().toString(36).substring(2, 8).toUpperCase();
-    setReferralCode(savedReferralCode);
-    localStorage.setItem('referralCode', savedReferralCode);
-
+    // Show toast notification about new Outline connection
     toast({
       title: "Новый способ подключения!",
       description: "Теперь доступно подключение через Outline VPN",
@@ -96,16 +91,6 @@ const Index = () => {
     const encodedKey = encodeURIComponent(selectedKey);
     const url = `https://ragimov700.ru/redirect/?app=${app}&config_url=${encodedKey}`;
     window.open(url, "_blank");
-  };
-
-  const handleCopyReferralLink = () => {
-    const link = `${window.location.origin}?ref=${referralCode}`;
-    navigator.clipboard.writeText(link);
-    toast({
-      title: "Ссылка скопирована",
-      description: "Теперь вы можете отправить её друзьям",
-      className: "bg-ramadan-gold/10 border-ramadan-gold text-ramadan-gold",
-    });
   };
 
   const handleOutlineConnect = () => {
@@ -159,36 +144,10 @@ const Index = () => {
             Настройте VPN за 2 простых шага
           </h2>
           <HorrorText />
-
-          <Card className="p-4 md:p-6 bg-gradient-to-r from-ramadan-emerald/10 to-ramadan-gold/10 border-ramadan-emerald/20 max-w-xl mx-auto">
-            <div className="space-y-4">
-              <div className="flex items-center gap-2">
-                <Share2 className="h-5 w-5 text-ramadan-emerald" />
-                <h3 className="text-xl font-semibold text-ramadan-emerald">
-                  Пригласить друзей
-                </h3>
-              </div>
-
-              <div className="flex items-center gap-2 p-3 bg-black/20 rounded-lg">
-                <LinkIcon className="h-4 w-4 text-ramadan-gold" />
-                <code className="flex-1 text-sm text-ramadan-gold break-all">
-                  {window.location.origin}?ref={referralCode}
-                </code>
-                <Button
-                  onClick={handleCopyReferralLink}
-                  variant="outline"
-                  className="bg-ramadan-gold/10 border-ramadan-gold/20 text-ramadan-gold hover:bg-ramadan-gold/20"
-                >
-                  Копировать
-                </Button>
-              </div>
-            </div>
-          </Card>
         </section>
 
         <div className="space-y-8 md:space-y-12 max-w-4xl mx-auto">
           <SetupInstructions />
-          <ReferralSystem />
           <VPNKeys onKeySelect={handleKeySelect} />
 
           {selectedKey && (
