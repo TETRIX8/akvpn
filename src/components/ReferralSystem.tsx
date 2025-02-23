@@ -33,10 +33,40 @@ export const ReferralSystem = () => {
     }
 
     setReferrals(savedReferrals);
+
+    // Проверяем реферальный код в URL при загрузке
+    const urlParams = new URLSearchParams(window.location.search);
+    const refCode = urlParams.get('ref');
+    
+    if (refCode && refCode !== savedReferralCode) { // Проверяем, что код не принадлежит текущему пользователю
+      const isNewReferral = !savedReferrals.some((ref: Referral) => ref.code === refCode);
+      
+      if (isNewReferral) {
+        const newReferral = {
+          code: refCode,
+          usedBy: Math.random().toString(36).substring(2, 8),
+          timestamp: Date.now()
+        };
+        
+        const updatedReferrals = [...savedReferrals, newReferral];
+        localStorage.setItem('referrals', JSON.stringify(updatedReferrals));
+        setReferrals(updatedReferrals);
+        
+        toast({
+          title: "Успешное приглашение!",
+          description: "Спасибо, что присоединились по реферальной ссылке",
+          className: "bg-ramadan-emerald/10 border-ramadan-emerald text-ramadan-emerald",
+        });
+
+        // Удаляем параметр ref из URL без перезагрузки страницы
+        const newUrl = window.location.pathname;
+        window.history.replaceState({}, document.title, newUrl);
+      }
+    }
   }, []);
 
   useEffect(() => {
-    // Проверка доступа
+    // Проверка доступа и обновление статуса
     const hasEnoughReferrals = referrals.length >= 3;
     setHasAccess(hasEnoughReferrals);
     localStorage.setItem('hasVPNAccess', JSON.stringify(hasEnoughReferrals));
