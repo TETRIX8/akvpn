@@ -1,12 +1,14 @@
+
 import React, { useState, useEffect } from "react";
 import { Button } from "./ui/button";
 import { VPNKeys } from "./VPNKeys";
 import { SetupInstructions } from "./SetupInstructions";
+import { ReferralSystem } from "./ReferralSystem";
 import { toast } from "./ui/use-toast";
 import { Smartphone, Laptop, Monitor } from "lucide-react";
 import { Card } from "./ui/card";
 
-type Step = "welcome" | "install" | "key-selection" | "connection" | "completed";
+type Step = "welcome" | "referral" | "install" | "key-selection" | "connection" | "completed";
 
 interface PlatformLink {
   name: string;
@@ -38,10 +40,42 @@ export const OnboardingFlow = () => {
     return (savedStep as Step) || "welcome";
   });
   const [hasSelectedKey, setHasSelectedKey] = useState(false);
+  const [hasAccess, setHasAccess] = useState(false);
 
   useEffect(() => {
+    // Проверка реферального кода в URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const refCode = urlParams.get('ref');
+    
+    if (refCode) {
+      const referrals = JSON.parse(localStorage.getItem('referrals') || '[]');
+      const isNewReferral = !referrals.some((ref: any) => ref.code === refCode);
+      
+      if (isNewReferral) {
+        const newReferral = {
+          code: refCode,
+          usedBy: Math.random().toString(36).substring(2, 8),
+          timestamp: Date.now()
+        };
+        
+        const updatedReferrals = [...referrals, newReferral];
+        localStorage.setItem('referrals', JSON.stringify(updatedReferrals));
+        
+        toast({
+          title: "Успешное приглашение!",
+          description: "Спасибо, что присоединились по реферальной ссылке",
+          className: "bg-ramadan-emerald/10 border-ramadan-emerald text-ramadan-emerald",
+        });
+      }
+    }
+
     localStorage.setItem("onboardingStep", currentStep);
   }, [currentStep]);
+
+  useEffect(() => {
+    const hasVPNAccess = JSON.parse(localStorage.getItem('hasVPNAccess') || 'false');
+    setHasAccess(hasVPNAccess);
+  }, []);
 
   const handleKeySelect = (key: string) => {
     setHasSelectedKey(true);
@@ -66,6 +100,17 @@ export const OnboardingFlow = () => {
   const handleNextStep = () => {
     switch (currentStep) {
       case "welcome":
+        setCurrentStep("referral");
+        break;
+      case "referral":
+        if (!hasAccess) {
+          toast({
+            title: "Доступ закрыт",
+            description: "Пригласите 3 пользователей для получения доступа",
+            variant: "destructive",
+          });
+          return;
+        }
         setCurrentStep("install");
         break;
       case "install":
@@ -116,6 +161,28 @@ export const OnboardingFlow = () => {
                 }}
               >
                 Начать настройку
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {currentStep === "referral" && (
+          <div className="space-y-6 animate-fade-in">
+            <h2 className="text-2xl font-horror text-red-600 text-center mb-6"
+                style={{ textShadow: '0 0 10px rgba(220, 38, 38, 0.8)' }}>
+              Реферальная система
+            </h2>
+            <ReferralSystem />
+            <div className="flex justify-center mt-6">
+              <Button
+                onClick={handleNextStep}
+                className="bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-full animate-pulse"
+                style={{
+                  textShadow: '0 0 10px rgba(220, 38, 38, 0.8)',
+                  boxShadow: '0 0 15px rgba(220, 38, 38, 0.4)'
+                }}
+              >
+                Продолжить
               </Button>
             </div>
           </div>
@@ -209,7 +276,7 @@ export const OnboardingFlow = () => {
 
         <div className="flex justify-center mt-8">
           <div className="flex gap-2">
-            {["welcome", "install", "key-selection", "connection"].map((step, index) => (
+            {["welcome", "referral", "install", "key-selection", "connection"].map((step, index) => (
               <div
                 key={step}
                 className={`w-3 h-3 rounded-full ${
