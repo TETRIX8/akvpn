@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { X, Check, Phone } from "lucide-react";
@@ -16,11 +15,11 @@ interface PricingPlan {
 }
 
 const pricingPlans: PricingPlan[] = [
-  { duration: "7 дней", price: 35, description: "Тестовый период" },
-  { duration: "30 дней", price: 99 },
-  { duration: "90 дней", price: 280, highlight: true },
-  { duration: "180 дней", price: 555 },
-  { duration: "360 дней", price: 1050 },
+  { duration: "7 дней", price: 39, description: "Тестовый период" },
+  { duration: "30 дней", price: 109 },
+  { duration: "90 дней", price: 308, highlight: true },
+  { duration: "180 дней", price: 611 },
+  { duration: "360 дней", price: 1155 },
 ];
 
 export const PurchasePopup: React.FC<PurchasePopupProps> = ({ isOpen, onClose }) => {
@@ -51,11 +50,9 @@ export const PurchasePopup: React.FC<PurchasePopupProps> = ({ isOpen, onClose })
       <div 
         className="bg-gradient-to-br from-vpn-dark to-vpn-blue/30 rounded-xl shadow-2xl max-w-md w-full border border-white/10 relative overflow-hidden"
       >
-        {/* Decorative elements */}
         <div className="absolute top-0 right-0 w-32 h-32 bg-vpn-blue/20 rounded-full -mr-16 -mt-16 blur-xl"></div>
         <div className="absolute bottom-0 left-0 w-24 h-24 bg-purple-500/20 rounded-full -ml-12 -mb-12 blur-xl"></div>
         
-        {/* Close button */}
         <button 
           onClick={onClose} 
           className="absolute top-3 right-3 text-white/60 hover:text-white transition-colors"
@@ -64,7 +61,6 @@ export const PurchasePopup: React.FC<PurchasePopupProps> = ({ isOpen, onClose })
           <X className="h-6 w-6" />
         </button>
         
-        {/* Content */}
         <div className="p-6">
           <h2 className="text-2xl font-bold text-white mb-2 flex items-center gap-2">
             <span className="bg-gradient-to-r from-vpn-blue to-purple-500 bg-clip-text text-transparent">
@@ -76,7 +72,6 @@ export const PurchasePopup: React.FC<PurchasePopupProps> = ({ isOpen, onClose })
             Выберите подходящий тарифный план и свяжитесь с нами
           </p>
           
-          {/* Pricing Plans */}
           <div className="space-y-3 mb-6">
             {pricingPlans.map((plan, index) => (
               <div 
@@ -104,7 +99,6 @@ export const PurchasePopup: React.FC<PurchasePopupProps> = ({ isOpen, onClose })
             ))}
           </div>
           
-          {/* Contact Section */}
           <div className="bg-white/5 rounded-lg p-4 border border-white/10">
             <h3 className="text-white text-center mb-4">📞 Номер для покупки</h3>
             
