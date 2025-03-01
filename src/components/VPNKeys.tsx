@@ -30,9 +30,23 @@ export const VPNKeys = ({}: VPNKeysProps) => {
 
   return (
     <div className="space-y-4 md:space-y-6 animate-fade-in backdrop-blur-lg bg-white/5 p-4 md:p-6 rounded-xl shadow-2xl border border-white/10">
-      <h2 className="text-xl md:text-3xl font-bold mb-4 md:mb-8 text-center text-white tracking-tight">
-        Ключи VPN
-      </h2>
+      <div className="space-y-2 md:space-y-4">
+        <h2 className="text-xl md:text-3xl font-bold text-center text-white tracking-tight">
+          Бесплатные ключи
+        </h2>
+        <p className="text-white/70 text-center text-sm md:text-base mb-2 md:mb-4">
+          Ограничение 50 ГБ в день на каждый ключ
+        </p>
+        <a 
+          href="https://telegra.ph/Podrobnyj-gajd-po-nastrojke-JetSurf-VPN-09-25" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="block text-center text-vpn-blue hover:text-vpn-blue/80 underline text-sm md:text-base transition-colors mb-4 md:mb-6"
+        >
+          Подробная инструкция по настройке
+        </a>
+      </div>
+      
       <div className="grid gap-4 md:gap-6">
         {vpnKeys.map((key, index) => (
           <Card 
