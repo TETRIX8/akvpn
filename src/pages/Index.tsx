@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { AnimatedTitle } from "@/components/AnimatedTitle";
 import { SetupInstructions } from "@/components/SetupInstructions";
@@ -10,8 +11,9 @@ import { SupportForm } from "@/components/SupportForm";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Card } from "@/components/ui/card";
-import { Smartphone, Laptop, Monitor } from "lucide-react";
+import { Smartphone, Laptop, Monitor, ShoppingCart } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { PurchasePopup } from "@/components/PurchasePopup";
 
 const platforms = [
   {
@@ -38,6 +40,7 @@ const Index = () => {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [isFirstVisit, setIsFirstVisit] = useState(true);
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
+  const [isPurchasePopupOpen, setIsPurchasePopupOpen] = useState(false);
   const isMobile = useIsMobile();
   const { toast } = useToast();
 
@@ -98,6 +101,14 @@ const Index = () => {
     window.open(url, "_blank");
   };
 
+  const openPurchasePopup = () => {
+    setIsPurchasePopupOpen(true);
+  };
+
+  const closePurchasePopup = () => {
+    setIsPurchasePopupOpen(false);
+  };
+
   if (isFirstVisit || isLoading) {
     return <LoadingScreen />;
   }
@@ -144,6 +155,17 @@ const Index = () => {
             Настройте VPN за 2 простых шага
           </h2>
           <HorrorText />
+          
+          {/* Purchase VPN Button */}
+          <div className="mt-6 flex justify-center">
+            <Button 
+              onClick={openPurchasePopup}
+              className="bg-gradient-to-r from-vpn-blue to-purple-600 hover:opacity-90 text-white font-medium px-6 py-3 rounded-full animate-pulse shadow-lg shadow-vpn-blue/20"
+            >
+              <ShoppingCart className="w-5 h-5 mr-2" />
+              Приобрести VPN
+            </Button>
+          </div>
         </section>
 
         <div className="space-y-8 md:space-y-12 max-w-4xl mx-auto">
@@ -239,6 +261,9 @@ const Index = () => {
           </a>
         </footer>
       </div>
+      
+      {/* Purchase Popup */}
+      <PurchasePopup isOpen={isPurchasePopupOpen} onClose={closePurchasePopup} />
     </div>
   );
 };
