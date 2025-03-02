@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
 import { PurchasePopup } from "@/components/PurchasePopup";
 import { VPNKeys } from "@/components/VPNKeys";
+import { PriceList } from "@/components/PriceList";
 
 const Index = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -79,18 +80,21 @@ const Index = () => {
         </section>
 
         <div className="space-y-8 md:space-y-12 max-w-4xl mx-auto">
+          {/* Price List */}
+          <PriceList />
+          
           {/* VPN Keys */}
           <VPNKeys />
 
-          {/* Technical Support */}
+          {/* Payment Confirmation */}
           <section className="mt-12 space-y-6 max-w-4xl mx-auto">
             <h2 className="text-2xl md:text-3xl font-bold text-center text-white">
-              Техническая поддержка
+              Подтверждение оплаты
             </h2>
             <p className="text-white/80 text-center">
-              Если у вас возникли проблемы, напишите нам, и мы поможем вам решить их
+              После оплаты отправьте скриншот чека и ваши контактные данные
             </p>
-            <SupportForm />
+            <SupportForm isPaymentConfirmation={true} />
           </section>
         </div>
 
