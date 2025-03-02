@@ -17,6 +17,7 @@ export const SupportForm: React.FC<SupportFormProps> = ({ isPaymentConfirmation 
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [screenshot, setScreenshot] = useState<File | null>(null);
+  const [screenshotBase64, setScreenshotBase64] = useState<string | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -45,22 +46,34 @@ export const SupportForm: React.FC<SupportFormProps> = ({ isPaymentConfirmation 
     }
 
     try {
-      const formData = new FormData();
-      formData.append('user_name', phoneNumber);
-      formData.append('user_email', email);
-      formData.append('message', message);
+      // Create a new form element for emailjs
+      const form = e.currentTarget;
       
-      if (screenshot) {
-        formData.append('screenshot', screenshot);
+      // Add base64 screenshot to form if available
+      if (screenshotBase64) {
+        // Create a hidden input for the base64 data
+        const hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden';
+        hiddenInput.name = 'screenshot_base64';
+        hiddenInput.value = screenshotBase64;
+        form.appendChild(hiddenInput);
       }
 
       // Use emailjs to send form data
       await emailjs.sendForm(
         'service_vcaxptx',
         'template_91c1fvw',
-        e.currentTarget,
+        form,
         'aoak44iftoobsH4Xm'
       );
+
+      // Remove the hidden input after sending
+      if (screenshotBase64) {
+        const hiddenInput = form.querySelector('input[name="screenshot_base64"]');
+        if (hiddenInput) {
+          form.removeChild(hiddenInput);
+        }
+      }
 
       toast({
         title: isPaymentConfirmation ? "Платеж подтвержден" : "Успешно отправлено",
@@ -72,6 +85,7 @@ export const SupportForm: React.FC<SupportFormProps> = ({ isPaymentConfirmation 
       setEmail('');
       setMessage('');
       setScreenshot(null);
+      setScreenshotBase64(null);
       setPreviewUrl(null);
       
       if (e.target instanceof HTMLFormElement) {
@@ -96,15 +110,22 @@ export const SupportForm: React.FC<SupportFormProps> = ({ isPaymentConfirmation 
       
       // Create preview URL
       const reader = new FileReader();
+      
       reader.onloadend = () => {
-        setPreviewUrl(reader.result as string);
+        const result = reader.result as string;
+        // Save both the preview URL and the base64 data
+        setPreviewUrl(result);
+        // Remove the data:image prefix for cleaner base64
+        setScreenshotBase64(result);
       };
+      
       reader.readAsDataURL(file);
     }
   };
 
   const handleRemoveScreenshot = () => {
     setScreenshot(null);
+    setScreenshotBase64(null);
     setPreviewUrl(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
