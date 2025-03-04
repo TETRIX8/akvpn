@@ -31,10 +31,10 @@ const App = () => {
     const handleDonationPopup = () => {
       setShowDonation(true);
       
-      // Hide popup after 2 seconds
+      // Show popup for 5 seconds instead of 2
       setTimeout(() => {
         setShowDonation(false);
-      }, 2000);
+      }, 5000);
     };
     
     // Show popup initially after a delay

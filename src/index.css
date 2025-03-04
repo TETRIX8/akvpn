@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -41,4 +42,55 @@
   display: inline-block;
   opacity: 0;
   transform: translateY(100%);
+}
+
+@layer utilities {
+  .glass-card {
+    @apply backdrop-blur-md bg-white/5 border border-white/10 shadow-lg;
+  }
+  
+  .glow-effect {
+    position: relative;
+    z-index: 1;
+  }
+  
+  .glow-effect::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: inherit;
+    filter: blur(20px);
+    opacity: 0.7;
+    z-index: -1;
+    transition: all 0.3s ease;
+  }
+  
+  .text-gradient {
+    @apply bg-gradient-to-r from-white via-white/90 to-white/70 bg-clip-text text-transparent;
+  }
+  
+  .hover-scale {
+    @apply transition-transform duration-300 hover:scale-105;
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.5; filter: blur(10px); }
+  50% { opacity: 1; filter: blur(15px); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
 }
