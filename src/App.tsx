@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import { useState, useEffect } from "react";
 import { LoadingScreen } from "./components/LoadingScreen";
 import { DonationPopup } from "./components/DonationPopup";
+import { trackVisit } from "./lib/supabase";
 
 const queryClient = new QueryClient();
 
@@ -16,6 +17,9 @@ const App = () => {
   const [showDonation, setShowDonation] = useState(false);
   
   useEffect(() => {
+    // Initialize user tracking
+    trackVisit().catch(err => console.error("Failed to track visit:", err));
+    
     // Show loading screen for 5 seconds
     const timer = setTimeout(() => {
       setLoading(false);

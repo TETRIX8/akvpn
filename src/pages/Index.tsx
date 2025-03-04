@@ -5,13 +5,13 @@ import { VPNKeys } from "@/components/VPNKeys";
 import { FAQ } from "@/components/FAQ";
 import { HorrorText } from "@/components/HorrorText";
 import { LoadingScreen } from "@/components/LoadingScreen";
-import { OnboardingFlow } from "@/components/OnboardingFlow";
 import { SupportForm } from "@/components/SupportForm";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Card } from "@/components/ui/card";
-import { Smartphone, Laptop, Monitor } from "lucide-react";
+import { Smartphone, Laptop, Monitor, Users, Key, Zap } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { trackVisit, trackConnectionClick, getStats } from "@/lib/supabase";
 
 const platforms = [
   {
@@ -34,8 +34,8 @@ const platforms = [
 const Index = () => {
   const [visitors, setVisitors] = useState(0);
   const [keyStats, setKeyStats] = useState<Record<string, number>>({});
+  const [platformStats, setPlatformStats] = useState<Record<string, number>>({});
   const [isLoading, setIsLoading] = useState(true);
-  const [showOnboarding, setShowOnboarding] = useState(false);
   const [isFirstVisit, setIsFirstVisit] = useState(true);
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const isMobile = useIsMobile();
@@ -43,6 +43,27 @@ const Index = () => {
 
   useEffect(() => {
     const hasVisited = localStorage.getItem('hasVisited');
+    
+    const trackUserVisit = async () => {
+      try {
+        await trackVisit();
+        const stats = await getStats();
+        setVisitors(stats.visitors || 0);
+        setKeyStats(stats.keyStats || {});
+        setPlatformStats(stats.platformStats || {});
+      } catch (error) {
+        console.error("Error tracking visit:", error);
+        const storedVisitors = parseInt(localStorage.getItem('visitorCount') || '0');
+        setVisitors(storedVisitors + 1);
+        localStorage.setItem('visitorCount', (storedVisitors + 1).toString());
+        
+        const stats = JSON.parse(localStorage.getItem('keyStats') || '{}');
+        setKeyStats(stats);
+      }
+    };
+    
+    trackUserVisit();
+    
     if (!hasVisited) {
       setIsFirstVisit(true);
       localStorage.setItem('hasVisited', 'true');
@@ -58,19 +79,11 @@ const Index = () => {
       setIsLoading(false);
     }
 
-    const storedVisitors = parseInt(localStorage.getItem('visitorCount') || '0');
-    setVisitors(storedVisitors + 1);
-    localStorage.setItem('visitorCount', (storedVisitors + 1).toString());
-
-    const stats = JSON.parse(localStorage.getItem('keyStats') || '{}');
-    setKeyStats(stats);
-
     const savedKey = localStorage.getItem('selectedVPNKey');
     if (savedKey) {
       setSelectedKey(savedKey);
     }
 
-    // Show toast notification about new Outline connection
     toast({
       title: "Новый способ подключения!",
       description: "Теперь доступно подключение через Outline VPN",
@@ -84,18 +97,54 @@ const Index = () => {
     localStorage.setItem('selectedVPNKey', key);
   };
 
-  const handleConnect = (app: string) => {
+  const handleConnect = async (app: string) => {
     if (!selectedKey) {
+      toast({
+        title: "Выберите ключ",
+        description: "Сначала выберите ключ VPN для подключения",
+        variant: "destructive",
+      });
       return;
     }
-    const encodedKey = encodeURIComponent(selectedKey);
-    const url = `https://ragimov700.ru/redirect/?app=${app}&config_url=${encodedKey}`;
-    window.open(url, "_blank");
+    
+    try {
+      await trackConnectionClick(app, selectedKey);
+      
+      const newPlatformStats = { ...platformStats };
+      newPlatformStats[app] = (newPlatformStats[app] || 0) + 1;
+      setPlatformStats(newPlatformStats);
+      
+      const encodedKey = encodeURIComponent(selectedKey);
+      const url = `https://ragimov700.ru/redirect/?app=${app}&config_url=${encodedKey}`;
+      window.open(url, "_blank");
+      
+      toast({
+        title: "Перенаправление...",
+        description: `Подключение через ${app}`,
+      });
+    } catch (error) {
+      console.error("Error connecting:", error);
+    }
   };
 
-  const handleOutlineConnect = () => {
-    const url = "http://77.238.225.250:43234/red?url=Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTpWNlg0RHE1VXA4MXZ0MEk4T2Q3QlNH@77.238.231.123:31546/?outline=1&name=🇳🇱Нидерланды%20-%20Ak";
-    window.open(url, "_blank");
+  const handleOutlineConnect = async () => {
+    try {
+      await trackConnectionClick("outline", "outline-default");
+      
+      const newPlatformStats = { ...platformStats };
+      newPlatformStats["outline"] = (newPlatformStats["outline"] || 0) + 1;
+      setPlatformStats(newPlatformStats);
+      
+      const url = "http://77.238.225.250:43234/red?url=Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTpWNlg0RHE1VXA4MXZ0MEk4T2Q3QlNH@77.238.231.123:31546/?outline=1&name=🇳🇱Нидерланды%20-%20Ak";
+      window.open(url, "_blank");
+      
+      toast({
+        title: "Перенаправление...",
+        description: "Подключение через Outline",
+      });
+    } catch (error) {
+      console.error("Error connecting to Outline:", error);
+    }
   };
 
   if (isFirstVisit || isLoading) {
@@ -122,16 +171,25 @@ const Index = () => {
             <div className="flex items-center gap-2 md:gap-4">
               <div className="flex items-center gap-1 md:gap-2">
                 <div className="w-1.5 md:w-2 h-1.5 md:h-2 bg-green-500 rounded-full animate-pulse" />
-                <span>{visitors} посетителей</span>
+                <div className="flex items-center gap-1">
+                  <Users className="w-3.5 h-3.5 text-green-400" />
+                  <span>{visitors} посетителей</span>
+                </div>
               </div>
             </div>
             <div className="flex flex-wrap justify-center gap-2 md:gap-4">
-              {Object.entries(keyStats).map(([key, count], index) => (
+              {Object.entries(keyStats).slice(0, 3).map(([key, count], index) => (
                 <div key={index} className="flex items-center gap-1 md:gap-2">
-                  <div className="w-1.5 md:w-2 h-1.5 md:h-2 bg-vpn-blue rounded-full" />
+                  <Key className="w-3.5 h-3.5 text-vpn-blue" />
                   <span>Ключ {index + 1}: {count} выборов</span>
                 </div>
               ))}
+            </div>
+            <div className="flex items-center gap-2 md:gap-4">
+              <div className="flex items-center gap-1 md:gap-2">
+                <Zap className="w-3.5 h-3.5 text-amber-400" />
+                <span>{Object.values(platformStats).reduce((a, b) => a + b, 0)} подключений</span>
+              </div>
             </div>
           </div>
         </div>
@@ -162,9 +220,17 @@ const Index = () => {
                   {platforms.map((platform) => (
                     <Card key={platform.name} className="p-4 bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300">
                       <div className="space-y-4">
-                        <div className="flex items-center gap-2 text-white">
-                          {platform.icon}
-                          <h3 className="font-semibold">{platform.name}</h3>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2 text-white">
+                            {platform.icon}
+                            <h3 className="font-semibold">{platform.name}</h3>
+                          </div>
+                          
+                          {platformStats[platform.app] > 0 && (
+                            <span className="text-xs font-medium text-white/90 bg-vpn-blue/30 px-2 py-1 rounded-full">
+                              {platformStats[platform.app]} подключений
+                            </span>
+                          )}
                         </div>
                         <Button
                           onClick={() => handleConnect(platform.app)}
@@ -192,9 +258,17 @@ const Index = () => {
                   />
                 </div>
                 <div className="flex-1 text-center md:text-left">
-                  <h2 className="text-2xl md:text-3xl font-bold text-emerald-400 mb-2">
-                    Outline VPN
-                  </h2>
+                  <div className="flex items-center justify-center md:justify-start gap-2 mb-2">
+                    <h2 className="text-2xl md:text-3xl font-bold text-emerald-400">
+                      Outline VPN
+                    </h2>
+                    
+                    {platformStats["outline"] > 0 && (
+                      <span className="text-xs font-medium text-white/90 bg-emerald-500/30 px-2 py-1 rounded-full">
+                        {platformStats["outline"]} подключений
+                      </span>
+                    )}
+                  </div>
                   <p className="text-white/80 mb-4">
                     Новый способ подключения через Outline - быстрый и надежный VPN клиент
                   </p>

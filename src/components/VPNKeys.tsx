@@ -1,8 +1,10 @@
+
 import React, { useState, useEffect } from "react";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
-import { Loader2, Check } from "lucide-react";
+import { Loader2, Check, Award } from "lucide-react";
 import { toast } from "./ui/use-toast";
+import { trackKeySelection, getStats } from "@/lib/supabase";
 
 interface VPNKeysProps {
   onKeySelect?: (key: string) => void;
@@ -21,26 +23,65 @@ export const VPNKeys = ({ onKeySelect }: VPNKeysProps) => {
   const [keyStats, setKeyStats] = useState<Record<string, number>>({});
 
   useEffect(() => {
-    const stats = JSON.parse(localStorage.getItem('keyStats') || '{}');
-    setKeyStats(stats);
+    // Load key stats from Supabase
+    const loadStats = async () => {
+      try {
+        const { keyStats } = await getStats();
+        setKeyStats(keyStats || {});
+      } catch (error) {
+        console.error("Error loading key stats:", error);
+        // Fallback to localStorage if Supabase fails
+        const stats = JSON.parse(localStorage.getItem('keyStats') || '{}');
+        setKeyStats(stats);
+      }
+    };
+    
+    loadStats();
   }, []);
 
   const handleKeySelect = async (key: string) => {
     setSelectedKey(key);
     setIsChecking(true);
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    const pingValue = Math.floor(Math.random() * (200 - 50) + 50);
-    setIsChecking(false);
-    localStorage.setItem('selectedVPNKey', key);
-    onKeySelect?.(key);
-    toast({
-      title: "Ключ готов",
-      description: (
-        <div>
-          Пинг: <span className="text-green-500 font-semibold">{pingValue} ms</span>
-        </div>
-      ),
-    });
+    
+    try {
+      // Extract key name for tracking
+      const keyName = key.split('#')[1] || `Key ${vpnKeys.indexOf(key) + 1}`;
+      
+      // Track selection in Supabase
+      await trackKeySelection(key, keyName);
+      
+      // Update local stats
+      const newStats = { ...keyStats };
+      newStats[key] = (newStats[key] || 0) + 1;
+      setKeyStats(newStats);
+      localStorage.setItem('keyStats', JSON.stringify(newStats));
+      
+      // Simulate checking connection
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+      const pingValue = Math.floor(Math.random() * (200 - 50) + 50);
+      
+      // Store selection and notify user
+      localStorage.setItem('selectedVPNKey', key);
+      onKeySelect?.(key);
+      
+      toast({
+        title: "Ключ готов",
+        description: (
+          <div>
+            Пинг: <span className="text-green-500 font-semibold">{pingValue} ms</span>
+          </div>
+        ),
+      });
+    } catch (error) {
+      console.error("Error selecting key:", error);
+      toast({
+        title: "Ошибка выбора ключа",
+        description: "Попробуйте выбрать другой ключ",
+        variant: "destructive",
+      });
+    } finally {
+      setIsChecking(false);
+    }
   };
 
   return (
@@ -68,8 +109,17 @@ export const VPNKeys = ({ onKeySelect }: VPNKeysProps) => {
                   </code>
                   <span className="text-[10px] md:text-xs font-medium text-white/80 bg-vpn-blue/20 px-2 md:px-3 py-1 md:py-1.5 rounded-lg flex items-center gap-2">
                     <div className="w-1.5 md:w-2 h-1.5 md:h-2 bg-vpn-blue rounded-full animate-pulse"></div>
-                    {keyStats[key] || 0} выборов
+                    <span className="font-semibold">
+                      {keyStats[key] || 0} <span className="opacity-80">выборов</span>
+                    </span>
                   </span>
+                  
+                  {keyStats[key] > 10 && (
+                    <span className="text-[10px] md:text-xs font-medium text-amber-300 bg-amber-500/20 px-2 md:px-3 py-1 md:py-1.5 rounded-lg flex items-center gap-2">
+                      <Award className="w-3 h-3 md:w-4 md:h-4" />
+                      Популярный
+                    </span>
+                  )}
                 </div>
               </div>
               <div className="flex gap-2 md:gap-3 w-full md:w-auto">
