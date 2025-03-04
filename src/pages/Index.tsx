@@ -1,18 +1,45 @@
-
 import React, { useState, useEffect } from "react";
 import { AnimatedTitle } from "@/components/AnimatedTitle";
+import { SetupInstructions } from "@/components/SetupInstructions";
+import { VPNKeys } from "@/components/VPNKeys";
+import { FAQ } from "@/components/FAQ";
 import { HorrorText } from "@/components/HorrorText";
 import { LoadingScreen } from "@/components/LoadingScreen";
+import { OnboardingFlow } from "@/components/OnboardingFlow";
 import { SupportForm } from "@/components/SupportForm";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart } from "lucide-react";
-import { PurchasePopup } from "@/components/PurchasePopup";
-import { VPNKeys } from "@/components/VPNKeys";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { Card } from "@/components/ui/card";
+import { Smartphone, Laptop, Monitor } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+
+const platforms = [
+  {
+    name: "iOS и macOS",
+    icon: <Laptop className="w-5 h-5" />,
+    app: "streisand",
+  },
+  {
+    name: "Android",
+    icon: <Smartphone className="w-5 h-5" />,
+    app: "v2raytun",
+  },
+  {
+    name: "Windows",
+    icon: <Monitor className="w-5 h-5" />,
+    app: "hiddify",
+  },
+];
 
 const Index = () => {
+  const [visitors, setVisitors] = useState(0);
+  const [keyStats, setKeyStats] = useState<Record<string, number>>({});
   const [isLoading, setIsLoading] = useState(true);
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const [isFirstVisit, setIsFirstVisit] = useState(true);
-  const [isPurchasePopupOpen, setIsPurchasePopupOpen] = useState(false);
+  const [selectedKey, setSelectedKey] = useState<string | null>(null);
+  const isMobile = useIsMobile();
+  const { toast } = useToast();
 
   useEffect(() => {
     const hasVisited = localStorage.getItem('hasVisited');
@@ -30,14 +57,45 @@ const Index = () => {
       setIsFirstVisit(false);
       setIsLoading(false);
     }
-  }, []);
 
-  const openPurchasePopup = () => {
-    setIsPurchasePopupOpen(true);
+    const storedVisitors = parseInt(localStorage.getItem('visitorCount') || '0');
+    setVisitors(storedVisitors + 1);
+    localStorage.setItem('visitorCount', (storedVisitors + 1).toString());
+
+    const stats = JSON.parse(localStorage.getItem('keyStats') || '{}');
+    setKeyStats(stats);
+
+    const savedKey = localStorage.getItem('selectedVPNKey');
+    if (savedKey) {
+      setSelectedKey(savedKey);
+    }
+
+    // Show toast notification about new Outline connection
+    toast({
+      title: "Новый способ подключения!",
+      description: "Теперь доступно подключение через Outline VPN",
+      duration: 2000,
+      className: "animate-fade-in",
+    });
+  }, [toast]);
+
+  const handleKeySelect = (key: string) => {
+    setSelectedKey(key);
+    localStorage.setItem('selectedVPNKey', key);
   };
 
-  const closePurchasePopup = () => {
-    setIsPurchasePopupOpen(false);
+  const handleConnect = (app: string) => {
+    if (!selectedKey) {
+      return;
+    }
+    const encodedKey = encodeURIComponent(selectedKey);
+    const url = `https://ragimov700.ru/redirect/?app=${app}&config_url=${encodedKey}`;
+    window.open(url, "_blank");
+  };
+
+  const handleOutlineConnect = () => {
+    const url = "http://77.238.225.250:43234/red?url=Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTpWNlg0RHE1VXA4MXZ0MEk4T2Q3QlNH@77.238.231.123:31546/?outline=1&name=🇳🇱Нидерланды%20-%20Ak";
+    window.open(url, "_blank");
   };
 
   if (isFirstVisit || isLoading) {
@@ -58,6 +116,27 @@ const Index = () => {
         <div className="absolute inset-0 bg-gradient-to-br from-vpn-dark via-vpn-blue/20 to-vpn-dark opacity-80" />
       </div>
 
+      <div className="relative z-10 w-full bg-black/40 backdrop-blur-sm border-b border-white/10">
+        <div className="container mx-auto px-3 md:px-4 py-2">
+          <div className="flex flex-wrap justify-center md:justify-between items-center gap-2 md:gap-4 text-xs md:text-sm text-white/80">
+            <div className="flex items-center gap-2 md:gap-4">
+              <div className="flex items-center gap-1 md:gap-2">
+                <div className="w-1.5 md:w-2 h-1.5 md:h-2 bg-green-500 rounded-full animate-pulse" />
+                <span>{visitors} посетителей</span>
+              </div>
+            </div>
+            <div className="flex flex-wrap justify-center gap-2 md:gap-4">
+              {Object.entries(keyStats).map(([key, count], index) => (
+                <div key={index} className="flex items-center gap-1 md:gap-2">
+                  <div className="w-1.5 md:w-2 h-1.5 md:h-2 bg-vpn-blue rounded-full" />
+                  <span>Ключ {index + 1}: {count} выборов</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="container mx-auto px-3 md:px-4 py-6 md:py-12 relative z-10">
         <section className="text-center space-y-4 mb-8 md:mb-12">
           <AnimatedTitle />
@@ -65,24 +144,73 @@ const Index = () => {
             Настройте VPN за 2 простых шага
           </h2>
           <HorrorText />
-          
-          {/* Purchase VPN Button */}
-          <div className="mt-6 flex justify-center">
-            <Button 
-              onClick={openPurchasePopup}
-              className="bg-gradient-to-r from-vpn-blue to-purple-600 hover:opacity-90 text-white font-medium px-6 py-3 rounded-full animate-pulse shadow-lg shadow-vpn-blue/20"
-            >
-              <ShoppingCart className="w-5 h-5 mr-2" />
-              Приобрести VPN
-            </Button>
-          </div>
         </section>
 
         <div className="space-y-8 md:space-y-12 max-w-4xl mx-auto">
-          {/* VPN Keys */}
-          <VPNKeys />
+          <SetupInstructions />
+          <VPNKeys onKeySelect={handleKeySelect} />
 
-          {/* Technical Support */}
+          {selectedKey && (
+            <section className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-vpn-blue/20 to-purple-600/20 p-4 md:p-8 border border-white/10 animate-fade-in">
+              <div className="absolute inset-0 bg-vpn-dark/40 backdrop-blur-sm" />
+              <div className="relative z-10">
+                <h2 className="text-2xl font-horror text-red-600 text-center mb-6"
+                    style={{ textShadow: '0 0 10px rgba(220, 38, 38, 0.8)' }}>
+                  Подключение
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {platforms.map((platform) => (
+                    <Card key={platform.name} className="p-4 bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300">
+                      <div className="space-y-4">
+                        <div className="flex items-center gap-2 text-white">
+                          {platform.icon}
+                          <h3 className="font-semibold">{platform.name}</h3>
+                        </div>
+                        <Button
+                          onClick={() => handleConnect(platform.app)}
+                          className="w-full bg-vpn-blue hover:bg-vpn-blue/90"
+                        >
+                          Подключиться
+                        </Button>
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            </section>
+          )}
+
+          <section className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-500/20 to-teal-600/20 p-4 md:p-8 border border-white/10 animate-fade-in">
+            <div className="absolute inset-0 bg-vpn-dark/40 backdrop-blur-sm" />
+            <div className="relative z-10 space-y-6">
+              <div className="flex flex-col md:flex-row items-center gap-6">
+                <div className="w-24 h-24 md:w-32 md:h-32">
+                  <img 
+                    src="/lovable-uploads/6b411e54-6efa-4898-a7b8-67efaa004402.png" 
+                    alt="Outline VPN" 
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+                <div className="flex-1 text-center md:text-left">
+                  <h2 className="text-2xl md:text-3xl font-bold text-emerald-400 mb-2">
+                    Outline VPN
+                  </h2>
+                  <p className="text-white/80 mb-4">
+                    Новый способ подключения через Outline - быстрый и надежный VPN клиент
+                  </p>
+                  <Button
+                    onClick={handleOutlineConnect}
+                    className="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3 rounded-full transition-all duration-300 shadow-lg hover:shadow-emerald-500/25"
+                  >
+                    Подключиться через Outline
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <FAQ />
+
           <section className="mt-12 space-y-6 max-w-4xl mx-auto">
             <h2 className="text-2xl md:text-3xl font-bold text-center text-white">
               Техническая поддержка
@@ -111,9 +239,6 @@ const Index = () => {
           </a>
         </footer>
       </div>
-      
-      {/* Purchase Popup */}
-      <PurchasePopup isOpen={isPurchasePopupOpen} onClose={closePurchasePopup} />
     </div>
   );
 };
