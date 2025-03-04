@@ -37,10 +37,10 @@ export const LoadingScreen = () => {
 
       {/* Content */}
       <div className="relative z-10 text-center">
-        {/* Title */}
+        {/* Title - Increased text size with text-5xl/text-7xl from text-4xl/text-6xl */}
         <div 
           className={`
-            text-4xl md:text-6xl text-ramadan-gold font-horror mb-8
+            text-5xl md:text-7xl text-ramadan-gold font-horror mb-8
             transition-all duration-1000 transform
             ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}
             animate-shimmer bg-gradient-to-r from-ramadan-gold via-yellow-300 to-ramadan-gold bg-[length:200%_100%]
