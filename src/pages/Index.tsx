@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { AnimatedTitle } from "@/components/AnimatedTitle";
 import { SetupInstructions } from "@/components/SetupInstructions";
