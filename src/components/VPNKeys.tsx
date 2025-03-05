@@ -8,7 +8,6 @@ import { trackKeySelection, getStats } from "@/lib/supabase";
 
 interface VPNKeysProps {
   onKeySelect?: (key: string) => void;
-  onConnect?: (platform: string, keyId: string) => Promise<void>;
 }
 
 const vpnKeys = [
@@ -18,7 +17,7 @@ const vpnKeys = [
   "vless://875f28ab-5e55-486b-abd3-0ce25a056ef3@185.232.204.20:433?type=tcp&security=reality&fp=chrome&pbk=yd8PE8yDUhhVF8LR76B7yx2DhK7DsFf6LjOAXEqerkw&sni=7.jetsurfnetwork.ru&flow=xtls-rprx-vision&sid=445e6461&spx=%2F#akvpn4"
 ];
 
-export const VPNKeys = ({ onKeySelect, onConnect }: VPNKeysProps) => {
+export const VPNKeys = ({ onKeySelect }: VPNKeysProps) => {
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [isChecking, setIsChecking] = useState(false);
   const [keyStats, setKeyStats] = useState<Record<string, number>>({});

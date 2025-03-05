@@ -1,3 +1,4 @@
+
 import { createClient } from '@supabase/supabase-js';
 
 // Актуальные данные для подключения к Supabase
@@ -29,17 +30,6 @@ export type ConnectionClick = {
   user_id: string;
   platform: string;
   key_id: string;
-};
-
-// Новый тип для отзывов
-export type Review = {
-  id?: number;
-  created_at?: string;
-  user_id: string;
-  name: string;
-  rating: number;
-  content: string;
-  avatar_color?: string;
 };
 
 // Analytics functions
@@ -130,34 +120,4 @@ export const getStats = async () => {
     keyStats,
     platformStats,
   };
-};
-
-// Функции для работы с отзывами
-export const submitReview = async (review: Omit<Review, 'id' | 'created_at'>): Promise<Review | null> => {
-  const { data, error } = await supabase
-    .from('reviews')
-    .insert(review)
-    .select()
-    .single();
-    
-  if (error) {
-    console.error('Error submitting review:', error);
-    return null;
-  }
-  
-  return data;
-};
-
-export const getReviews = async (): Promise<Review[]> => {
-  const { data, error } = await supabase
-    .from('reviews')
-    .select('*')
-    .order('created_at', { ascending: false });
-    
-  if (error) {
-    console.error('Error fetching reviews:', error);
-    return [];
-  }
-  
-  return data || [];
 };
