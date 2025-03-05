@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
+import Reviews from "./pages/Reviews";
 import { useState, useEffect } from "react";
 import { LoadingScreen } from "./components/LoadingScreen";
 import { DonationPopup } from "./components/DonationPopup";
@@ -67,6 +68,7 @@ const App = () => {
             <BrowserRouter>
               <Routes>
                 <Route path="/" element={<Index />} />
+                <Route path="/reviews" element={<Reviews />} />
               </Routes>
             </BrowserRouter>
             <DonationPopup isVisible={showDonation} />
