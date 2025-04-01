@@ -21,10 +21,10 @@ const App = () => {
     // Initialize user tracking
     trackVisit().catch(err => console.error("Failed to track visit:", err));
     
-    // Show loading screen for 5 seconds
+    // Show loading screen for 4 seconds (reduced from 5)
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 5000);
+    }, 4000);
     
     return () => clearTimeout(timer);
   }, []);
@@ -36,7 +36,7 @@ const App = () => {
     const handleDonationPopup = () => {
       setShowDonation(true);
       
-      // Show popup for 5 seconds instead of 2
+      // Show popup for 5 seconds
       setTimeout(() => {
         setShowDonation(false);
       }, 5000);

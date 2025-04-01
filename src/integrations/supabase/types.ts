@@ -44,6 +44,27 @@ export type Database = {
           },
         ]
       }
+      chat_messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          user_name: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          user_name: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          user_name?: string
+        }
+        Relationships: []
+      }
       chat_room_participants: {
         Row: {
           chat_room_id: string
@@ -496,6 +517,83 @@ export type Database = {
         }
         Relationships: []
       }
+      student_performance: {
+        Row: {
+          attendance_percent: number
+          average_grade: number
+          created_at: string
+          id: string
+          max_score_points: number
+          score_points: number
+          student_id: string
+          study_period_name: string
+          study_period_status: Database["public"]["Enums"]["study_period_status"]
+          updated_at: string
+        }
+        Insert: {
+          attendance_percent: number
+          average_grade: number
+          created_at?: string
+          id?: string
+          max_score_points: number
+          score_points: number
+          student_id: string
+          study_period_name: string
+          study_period_status: Database["public"]["Enums"]["study_period_status"]
+          updated_at?: string
+        }
+        Update: {
+          attendance_percent?: number
+          average_grade?: number
+          created_at?: string
+          id?: string
+          max_score_points?: number
+          score_points?: number
+          student_id?: string
+          study_period_name?: string
+          study_period_status?: Database["public"]["Enums"]["study_period_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_performance_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "student_profiles"
+            referencedColumns: ["student_id"]
+          },
+        ]
+      }
+      student_profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          email: string
+          first_name: string
+          id: string
+          last_name: string
+          student_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          email: string
+          first_name: string
+          id?: string
+          last_name: string
+          student_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          email?: string
+          first_name?: string
+          id?: string
+          last_name?: string
+          student_id?: string
+        }
+        Relationships: []
+      }
       students: {
         Row: {
           created_at: string
@@ -688,6 +786,7 @@ export type Database = {
     }
     Enums: {
       referral_status: "pending" | "completed"
+      study_period_status: "STARTED" | "FINISHED"
       user_role: "admin" | "user"
     }
     CompositeTypes: {

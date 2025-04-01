@@ -29,6 +29,13 @@ export default {
           blue: "#0EA5E9",
           dark: "#1A1F2C",
         },
+        spring: {
+          primary: "#4ade80",
+          secondary: "#a7f3d0",
+          accent: "#2dd4bf",
+          dark: "#064e3b",
+          light: "#ecfdf5",
+        },
         ramadan: {
           gold: "#FFD700",
           emerald: "#50C878",
@@ -96,6 +103,10 @@ export default {
         glow: {
           "0%, 100%": { opacity: "1" },
           "50%": { opacity: "0.5" }
+        },
+        blossom: {
+          "0%": { transform: "scale(0)", opacity: "0" },
+          "100%": { transform: "scale(1)", opacity: "1" }
         }
       },
       animation: {
@@ -106,13 +117,15 @@ export default {
         "text-reveal": "text-reveal 0.5s ease-out forwards",
         drip: "drip 1s ease-in-out forwards",
         shimmer: "shimmer 3s linear infinite",
-        glow: "glow 2s ease-in-out infinite"
+        glow: "glow 2s ease-in-out infinite",
+        blossom: "blossom 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards"
       },
       fontFamily: {
         horror: ["Nosifer", "cursive"],
       },
       backgroundImage: {
         'ramadan-pattern': "url('data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%239C92AC' fill-opacity='0.05' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E')",
+        'spring-pattern': "url('data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,0 L20,0 L20,20 L0,20 L0,0 Z M10,17 C13.866,17 17,13.866 17,10 C17,6.134 13.866,3 10,3 C6.134,3 3,6.134 3,10 C3,13.866 6.134,17 10,17 Z' fill='%234ade80' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E')",
       },
     },
   },
