@@ -1,5 +1,6 @@
 
 import React, { useEffect, useState } from "react";
+import { SpringAnimation } from "./SpringAnimation";
 
 export const LoadingScreen = () => {
   const [progress, setProgress] = useState(0);
@@ -22,21 +23,14 @@ export const LoadingScreen = () => {
 
   return (
     <div className="fixed inset-0 bg-spring-light flex flex-col items-center justify-center z-50">
-      {/* Background Image */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ 
-          backgroundImage: 'url(/lovable-uploads/d30cc1ad-1163-4a42-b5fd-f609aa4d1cf1.png)',
-          backgroundSize: 'cover',
-          opacity: 0.2
-        }} 
-      />
+      {/* WebGL Animation Background */}
+      <SpringAnimation className="absolute inset-0 z-0" />
       
       {/* Overlay with Spring Pattern */}
-      <div className="absolute inset-0 bg-gradient-to-br from-spring-light via-spring-secondary/30 to-spring-accent/20 opacity-90 bg-spring-pattern" />
+      <div className="absolute inset-0 bg-gradient-to-br from-spring-light/80 via-spring-secondary/20 to-spring-accent/10 opacity-90 bg-spring-pattern z-10" />
 
       {/* Content */}
-      <div className="relative z-10 text-center">
+      <div className="relative z-20 text-center">
         {/* Title */}
         <div 
           className={`
