@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from "react";
-import { SpringAnimation } from "./SpringAnimation";
+import { BackgroundAnimation } from "./BackgroundAnimation";
 
 export const LoadingScreen = () => {
   const [progress, setProgress] = useState(0);
@@ -24,19 +24,19 @@ export const LoadingScreen = () => {
   return (
     <div className="fixed inset-0 bg-spring-light flex flex-col items-center justify-center z-50">
       {/* WebGL Animation Background */}
-      <SpringAnimation className="absolute inset-0 z-0" />
+      <BackgroundAnimation className="absolute inset-0 z-0" animateText={true} textToAnimate="AKVPN" />
       
       {/* Overlay with Spring Pattern */}
       <div className="absolute inset-0 bg-gradient-to-br from-spring-light/80 via-spring-secondary/20 to-spring-accent/10 opacity-90 bg-spring-pattern z-10" />
 
       {/* Content */}
       <div className="relative z-20 text-center">
-        {/* Title */}
+        {/* Hidden Title - Visual is handled by WebGL animation */}
         <div 
           className={`
             text-5xl md:text-7xl font-bold mb-8
             transition-all duration-1000 transform
-            ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}
+            ${isVisible ? 'opacity-0' : 'opacity-0'}
             animate-shimmer spring-text
           `}
           style={{

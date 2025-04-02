@@ -21,10 +21,10 @@ const App = () => {
     // Initialize user tracking
     trackVisit().catch(err => console.error("Failed to track visit:", err));
     
-    // Show loading screen for 4 seconds (reduced from 5)
+    // Show loading screen for 6 seconds (increased to allow animation to complete)
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 4000);
+    }, 6000);
     
     return () => clearTimeout(timer);
   }, []);
