@@ -6,12 +6,14 @@ interface BackgroundAnimationProps {
   className?: string;
   textToAnimate?: string;
   animateText?: boolean;
+  animationSpeed?: number; // New prop for controlling animation speed
 }
 
 export const BackgroundAnimation: React.FC<BackgroundAnimationProps> = ({ 
   className = '', 
   textToAnimate = 'AKVPN',
-  animateText = false 
+  animateText = false,
+  animationSpeed = 1.0 // Default speed multiplier
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   
@@ -59,12 +61,12 @@ export const BackgroundAnimation: React.FC<BackgroundAnimationProps> = ({
     const leafGeometry = createLeaf();
     const sphereGeometry = new THREE.SphereGeometry(0.25, 8, 8);
     
-    // Leaf colors
-    const leafColors = [
-      0x4ade80, // green-400
-      0xa7f3d0, // spring-secondary
-      0x34d399, // emerald-400
-      0x10b981, // emerald-500
+    // More serious and less distracting colors
+    const particleColors = [
+      0xFFFFFF, // White
+      0xCCCCCC, // Light Gray
+      0xAAAAAA, // Medium Gray
+      0xDDDDDD, // Silver
     ];
     
     // If animateText is true, create text particles
@@ -108,7 +110,7 @@ export const BackgroundAnimation: React.FC<BackgroundAnimationProps> = ({
       // Create particles for each point
       for (let i = 0; i < Math.min(particlesCount, textPoints.length); i++) {
         const material = new THREE.MeshBasicMaterial({
-          color: leafColors[Math.floor(Math.random() * leafColors.length)],
+          color: particleColors[Math.floor(Math.random() * particleColors.length)],
           transparent: true,
           opacity: 0.9,
         });
@@ -132,53 +134,53 @@ export const BackgroundAnimation: React.FC<BackgroundAnimationProps> = ({
         particles.add(particle);
       }
     } else {
-      // Create leaf particles
+      // Create particles
       for (let i = 0; i < particlesCount; i++) {
         const material = new THREE.MeshBasicMaterial({
-          color: leafColors[Math.floor(Math.random() * leafColors.length)],
+          color: particleColors[Math.floor(Math.random() * particleColors.length)],
           transparent: true,
           opacity: 0.7,
           side: THREE.DoubleSide
         });
         
-        const leaf = new THREE.Mesh(leafGeometry, material);
+        const particle = new THREE.Mesh(sphereGeometry, material);
         
         // Random scaling
         const scale = Math.random() * 0.5 + 0.3;
-        leaf.scale.set(scale, scale, scale);
+        particle.scale.set(scale, scale, scale);
         
         // Random positions within a box
-        leaf.position.x = (Math.random() - 0.5) * 40;
-        leaf.position.y = (Math.random() - 0.5) * 30;
-        leaf.position.z = (Math.random() - 0.5) * 20;
+        particle.position.x = (Math.random() - 0.5) * 40;
+        particle.position.y = (Math.random() - 0.5) * 30;
+        particle.position.z = (Math.random() - 0.5) * 20;
         
         // Random rotation
-        leaf.rotation.x = Math.random() * Math.PI;
-        leaf.rotation.y = Math.random() * Math.PI;
-        leaf.rotation.z = Math.random() * Math.PI;
+        particle.rotation.x = Math.random() * Math.PI;
+        particle.rotation.y = Math.random() * Math.PI;
+        particle.rotation.z = Math.random() * Math.PI;
         
         // Store initial position for animation
-        (leaf as any).rotationSpeed = {
+        (particle as any).rotationSpeed = {
           x: Math.random() * 0.01 - 0.005,
           y: Math.random() * 0.01 - 0.005,
           z: Math.random() * 0.01 - 0.005
         };
         
-        (leaf as any).floatSpeed = Math.random() * 0.01 + 0.001;
-        (leaf as any).floatDistance = Math.random() * 2 + 1;
+        (particle as any).floatSpeed = Math.random() * 0.01 + 0.001;
+        (particle as any).floatDistance = Math.random() * 2 + 1;
         
-        particles.add(leaf);
+        particles.add(particle);
       }
     }
     
     scene.add(particles);
     
-    // Add a teal/green gradient background light
-    const directionalLight = new THREE.DirectionalLight(0x4ade80, 1);
+    // More subtle lighting
+    const directionalLight = new THREE.DirectionalLight(0xFFFFFF, 0.8);
     directionalLight.position.set(1, 1, 1);
     scene.add(directionalLight);
     
-    const ambientLight = new THREE.AmbientLight(0x2dd4bf, 0.5);
+    const ambientLight = new THREE.AmbientLight(0xCCCCCC, 0.3);
     scene.add(ambientLight);
     
     // Animation
@@ -186,65 +188,64 @@ export const BackgroundAnimation: React.FC<BackgroundAnimationProps> = ({
     const animate = () => {
       requestAnimationFrame(animate);
       
-      time += 0.005;
+      // Apply animation speed multiplier
+      time += 0.005 * animationSpeed;
       
       if (animateText) {
-        // Animate text particles
-        const progress = Math.min(1, time / 4); // Animation completes in ~8 seconds
+        // Faster animation formation - adjusted parameters
+        const progress = Math.min(1, time / (3 / animationSpeed)); // Animation completes faster based on speed
         
         textParticles.forEach((particle, i) => {
-          if (progress < 0.6) {
-            // Chaotic movement phase
-            particle.position.x += (Math.sin(time * 3 + i) * 0.1) * (1 - progress * 1.5);
-            particle.position.y += (Math.cos(time * 2 + i) * 0.1) * (1 - progress * 1.5);
-            particle.position.z += (Math.sin(time + i) * 0.05) * (1 - progress * 1.5);
+          if (progress < 0.4) { // Shorter chaotic phase (was 0.6)
+            // More aggressive chaotic movement for a threatening look
+            particle.position.x += (Math.sin(time * 5 + i) * 0.15) * (1 - progress * 2.5);
+            particle.position.y += (Math.cos(time * 4 + i) * 0.15) * (1 - progress * 2.5);
+            particle.position.z += (Math.sin(time * 3 + i) * 0.1) * (1 - progress * 2.5);
           } else {
-            // Formation phase - smoothly move to final positions
-            const formationProgress = (progress - 0.6) / 0.4; // Normalize to 0-1 for formation phase
+            // Formation phase - more rapid convergence to final positions
+            const formationProgress = (progress - 0.4) / 0.6;
             
             particle.position.x = THREE.MathUtils.lerp(
               particle.position.x,
               finalPositions[i].x,
-              0.05 + formationProgress * 0.1
+              0.1 + formationProgress * 0.2 * animationSpeed
             );
             
             particle.position.y = THREE.MathUtils.lerp(
               particle.position.y,
               finalPositions[i].y,
-              0.05 + formationProgress * 0.1
+              0.1 + formationProgress * 0.2 * animationSpeed
             );
             
             particle.position.z = THREE.MathUtils.lerp(
               particle.position.z,
               finalPositions[i].z,
-              0.05 + formationProgress * 0.1
+              0.1 + formationProgress * 0.2 * animationSpeed
             );
           }
           
-          // Slowly rotate the particles
-          particle.rotation.x += 0.01;
-          particle.rotation.y += 0.01;
+          // Less playful rotation for a more serious look
+          particle.rotation.x += 0.005;
+          particle.rotation.y += 0.005;
         });
       } else {
-        // Animate individual leaves
-        particles.children.forEach((leaf, i) => {
-          const l = leaf as any;
+        // Animate individual particles
+        particles.children.forEach((particle, i) => {
+          const p = particle as any;
           
-          // Rotate leaves
-          leaf.rotation.x += l.rotationSpeed.x;
-          leaf.rotation.y += l.rotationSpeed.y;
-          leaf.rotation.z += l.rotationSpeed.z;
+          // More subtle rotation
+          particle.rotation.x += p.rotationSpeed.x * 0.5;
+          particle.rotation.y += p.rotationSpeed.y * 0.5;
+          particle.rotation.z += p.rotationSpeed.z * 0.5;
           
-          // Float leaves
-          leaf.position.y += Math.sin(time + i * 0.1) * 0.01;
+          // More subtle movement
+          particle.position.y += Math.sin(time + i * 0.1) * 0.005;
+          particle.position.x += Math.sin(time * p.floatSpeed) * 0.005;
           
-          // Move leaves slightly
-          leaf.position.x += Math.sin(time * l.floatSpeed) * 0.01;
-          
-          // Reset leaves that go off screen
-          if (leaf.position.y > 15) {
-            leaf.position.y = -15;
-            leaf.position.x = (Math.random() - 0.5) * 40;
+          // Reset particles that go off screen
+          if (particle.position.y > 15) {
+            particle.position.y = -15;
+            particle.position.x = (Math.random() - 0.5) * 40;
           }
         });
       }
@@ -272,7 +273,7 @@ export const BackgroundAnimation: React.FC<BackgroundAnimationProps> = ({
       }
       window.removeEventListener('resize', handleResize);
     };
-  }, [animateText, textToAnimate]);
+  }, [animateText, textToAnimate, animationSpeed]);
   
   return <div ref={containerRef} className={`pointer-events-none ${className}`}></div>;
 };
