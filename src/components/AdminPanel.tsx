@@ -10,7 +10,7 @@ import { AdminLogin } from "./AdminLogin";
 import { KeysManager } from "./admin/KeysManager";
 import { ReviewsManager } from "./admin/ReviewsManager";
 import { SettingsManager } from "./admin/SettingsManager";
-import { LogoutIcon, Key, MessageSquare, Settings } from "lucide-react";
+import { LogOutIcon, Key, MessageSquare, Settings } from "lucide-react";
 
 export const AdminPanel = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -42,7 +42,7 @@ export const AdminPanel = () => {
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-2xl font-bold">AKVPN Панель администратора</h1>
           <Button variant="outline" onClick={handleLogout} className="gap-2 border-white/20 hover:bg-white/10">
-            <LogoutIcon size={16} />
+            <LogOutIcon size={16} />
             Выйти
           </Button>
         </div>
