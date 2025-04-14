@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
 import Reviews from "./pages/Reviews";
+import Admin from "./pages/Admin";
 import { useState, useEffect } from "react";
 import { LoadingScreen } from "./components/LoadingScreen";
 import { DonationPopup } from "./components/DonationPopup";
@@ -69,6 +70,7 @@ const App = () => {
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/reviews" element={<Reviews />} />
+                <Route path="/ak" element={<Admin />} />
               </Routes>
             </BrowserRouter>
             <DonationPopup isVisible={showDonation} />
