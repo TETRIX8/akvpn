@@ -1,69 +1,74 @@
-# Welcome to your Lovable project
+# Руководство по запуску проекта AKVPN
 
-## Project info
+## Информация о проекте
 
-**URL**: https://lovable.dev/projects/aeb3df22-dfab-4328-9ac3-97e9ee0e31ae
+**Сайт проекта**: [AKVPN - Бесплатный VPN сервис](https://akvpn.lovable.app)
 
-## How can I edit this code?
+**Автор**: [Ваше имя/никнейм или название команды]
 
-There are several ways of editing your application.
+## Как редактировать этот проект?
 
-**Use Lovable**
+### Способ 1: Через Lovable
+1. Перейдите в [Lovable Project](https://lovable.dev/projects/aeb3df22-dfab-4328-9ac3-97e9ee0e31ae)
+2. Используйте подсказки для внесения изменений
+3. Все изменения автоматически сохранятся в репозиторий
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/aeb3df22-dfab-4328-9ac3-97e9ee0e31ae) and start prompting.
+### Способ 2: Локальная разработка
+Для работы на своем компьютере:
 
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+1. Установите Node.js и npm (рекомендуем через [nvm](https://github.com/nvm-sh/nvm#installing-and-updating))
+2. Выполните в терминале:
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+# Клонируем репозиторий
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+git clone  https://github.com/TETRIX8/akvpn.git
+# Переходим в папку проекта
+cd akvpn-project
 
-# Step 3: Install the necessary dependencies.
-npm i
+# Устанавливаем зависимости
+npm install
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Запускаем сервер разработки
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+После этого проект будет доступен по адресу `http://localhost:5173`
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Способ 3: Прямое редактирование в GitHub
+1. Найдите нужный файл в репозитории
+2. Нажмите иконку карандаша (Edit)
+3. Внесите изменения и сохраните (Commit)
 
-**Use GitHub Codespaces**
+### Способ 4: Использование GitHub Codespaces
+1. Откройте главную страницу репозитория
+2. Нажмите зеленую кнопку "Code"
+3. Выберите вкладку "Codespaces"
+4. Создайте новое окружение кнопкой "New codespace"
+5. Редактируйте файлы прямо в браузере
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Описание проекта AKVPN
 
-## What technologies are used for this project?
+AKVPN - это демонстрационный проект VPN-сервиса с:
+- Бесплатными ключами доступа
+- Простым интерфейсом подключения
+- Быстрыми серверами
+- Защитой приватности
 
-This project is built with .
+**Основной URL**: [https://akvpn.lovable.app](https://akvpn.lovable.app)
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Используемые технологии
+- **Vite** - быстрый сборщик проекта
+- **TypeScript** - язык программирования
+- **React** - библиотека для интерфейсов
+- **shadcn-ui** - компоненты интерфейса
+- **Tailwind CSS** - стилизация
 
-## How can I deploy this project?
+## Как развернуть проект?
 
-Simply open [Lovable](https://lovable.dev/projects/aeb3df22-dfab-4328-9ac3-97e9ee0e31ae) and click on Share -> Publish.
+Для публикации:
 
-## I want to use a custom domain - is that possible?
 
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+## Использование собственного домена
+
+В текущей версии Lovable не поддерживает кастомные домены. Для развертывания под своим доменом рекомендуем использовать Netlify. Подробнее в [документации](https://docs.lovable.dev/tips-tricks/custom-domain/).
