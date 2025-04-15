@@ -1,10 +1,10 @@
-
 import React, { useState, useEffect } from "react";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
 import { Loader2, Check, Award } from "lucide-react";
 import { toast } from "./ui/use-toast";
 import { trackKeySelection, getStats } from "@/lib/supabase";
+import { PaymentGateway } from "./PaymentGateway";
 
 interface VPNKeysProps {
   onKeySelect?: (key: string) => void;
@@ -25,8 +25,31 @@ export const VPNKeys = ({
   const [isChecking, setIsChecking] = useState(false);
   const [keyStats, setKeyStats] = useState<Record<string, number>>({});
   const [vpnKeys, setVpnKeys] = useState<string[]>(defaultKeys);
+  const [hasPaid, setHasPaid] = useState(false);
+  const [currentDeviceId, setCurrentDeviceId] = useState<string>("");
   
   useEffect(() => {
+    // Generate current device ID
+    const generateDeviceId = () => {
+      const platform = navigator.platform;
+      const userAgent = navigator.userAgent;
+      const language = navigator.language;
+      const deviceString = `${platform}-${userAgent}-${language}`;
+      return window.btoa(deviceString);
+    };
+    
+    const deviceId = generateDeviceId();
+    setCurrentDeviceId(deviceId);
+    
+    // Check payment status
+    const paymentInfo = localStorage.getItem('vpnPaymentInfo');
+    if (paymentInfo) {
+      const { deviceId: paidDeviceId, paid } = JSON.parse(paymentInfo);
+      if (paid && deviceId === paidDeviceId) {
+        setHasPaid(true);
+      }
+    }
+    
     // Load custom keys from localStorage if available
     const customKeys = localStorage.getItem("vpn_keys");
     if (customKeys) {
@@ -51,6 +74,15 @@ export const VPNKeys = ({
   }, []);
 
   const handleKeySelect = async (key: string) => {
+    if (!hasPaid) {
+      toast({
+        title: "Требуется оплата",
+        description: "Пожалуйста, оплатите доступ к VPN",
+        variant: "destructive"
+      });
+      return;
+    }
+    
     setSelectedKey(key);
     setIsChecking(true);
     try {
@@ -85,13 +117,17 @@ export const VPNKeys = ({
       console.error("Error selecting key:", error);
       toast({
         title: "Ошибка выбора ключа",
-        description: "Попробуйте выбрать другой ключ",
+        description: "Попробуйте выбрать другой к��юч",
         variant: "destructive"
       });
     } finally {
       setIsChecking(false);
     }
   };
+
+  if (!hasPaid) {
+    return <PaymentGateway onPaymentComplete={() => setHasPaid(true)} />;
+  }
 
   return <div className="space-y-4 md:space-y-6 animate-fade-in backdrop-blur-lg bg-white/5 p-4 md:p-6 rounded-xl shadow-2xl border border-white/10">
       <h2 className="text-xl md:text-3xl font-bold mb-4 md:mb-8 text-center text-white tracking-tight">
