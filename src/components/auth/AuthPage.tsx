@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { toast } from '@/hooks/use-toast';
 import { useForm } from 'react-hook-form';
+import { Loader2 } from 'lucide-react';
 
 type FormData = {
   email: string;
@@ -15,9 +16,11 @@ type FormData = {
 
 export const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const { register, handleSubmit, formState: { errors }, reset } = useForm<FormData>();
 
   const onSubmit = async (data: FormData) => {
+    setIsLoading(true);
     try {
       if (isLogin) {
         const { error } = await supabase.auth.signInWithPassword({
@@ -26,6 +29,11 @@ export const AuthPage = () => {
         });
         
         if (error) throw error;
+        
+        toast({
+          title: "Вход выполнен успешно",
+          description: "Добро пожаловать!",
+        });
       } else {
         const { error } = await supabase.auth.signUp({
           email: data.email,
@@ -34,6 +42,7 @@ export const AuthPage = () => {
             data: {
               username: data.username,
             },
+            emailRedirectTo: window.location.origin,
           },
         });
         
@@ -45,11 +54,24 @@ export const AuthPage = () => {
         });
       }
     } catch (error: any) {
+      let errorMessage = error.message;
+      
+      // Преобразование сообщений об ошибках для более понятного отображения
+      if (errorMessage.includes("email not confirmed")) {
+        errorMessage = "Email не подтвержден. Проверьте почту или свяжитесь с администратором.";
+      } else if (errorMessage.includes("Invalid login credentials")) {
+        errorMessage = "Неверный email или пароль";
+      } else if (errorMessage.includes("already registered")) {
+        errorMessage = "Этот email уже зарегистрирован";
+      }
+      
       toast({
         title: "Ошибка",
-        description: error.message,
+        description: errorMessage,
         variant: "destructive",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -68,6 +90,7 @@ export const AuthPage = () => {
                 className="bg-black/50 border-white/20 text-white"
                 {...register('username', { required: !isLogin })}
               />
+              {errors.username && <p className="text-red-500 text-xs mt-1">Это поле обязательно</p>}
             </div>
           )}
           
@@ -76,8 +99,17 @@ export const AuthPage = () => {
               type="email"
               placeholder="Email"
               className="bg-black/50 border-white/20 text-white"
-              {...register('email', { required: true })}
+              {...register('email', { 
+                required: true,
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: "Некорректный email адрес"
+                }
+              })}
             />
+            {errors.email && <p className="text-red-500 text-xs mt-1">
+              {errors.email.message || "Это поле обязательно"}
+            </p>}
           </div>
           
           <div>
@@ -85,15 +117,32 @@ export const AuthPage = () => {
               type="password"
               placeholder="Пароль"
               className="bg-black/50 border-white/20 text-white"
-              {...register('password', { required: true })}
+              {...register('password', { 
+                required: true,
+                minLength: {
+                  value: 6,
+                  message: "Пароль должен содержать минимум 6 символов"
+                }
+              })}
             />
+            {errors.password && <p className="text-red-500 text-xs mt-1">
+              {errors.password.message || "Это поле обязательно"}
+            </p>}
           </div>
 
           <Button 
             type="submit" 
             className="w-full bg-vpn-blue hover:bg-vpn-blue/90"
+            disabled={isLoading}
           >
-            {isLogin ? 'Войти' : 'Зарегистрироваться'}
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                {isLogin ? 'Вход...' : 'Регистрация...'}
+              </>
+            ) : (
+              isLogin ? 'Войти' : 'Зарегистрироваться'
+            )}
           </Button>
         </form>
 
@@ -104,6 +153,7 @@ export const AuthPage = () => {
               reset();
             }}
             className="text-vpn-blue hover:text-vpn-blue/90 text-sm"
+            disabled={isLoading}
           >
             {isLogin ? 'Создать аккаунт' : 'Уже есть аккаунт?'}
           </button>
