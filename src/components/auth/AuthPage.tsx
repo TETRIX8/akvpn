@@ -12,7 +12,6 @@ type FormData = {
   email: string;
   password: string;
   username?: string;
-  referralCode?: string;
 };
 
 export const AuthPage = () => {
@@ -36,66 +35,22 @@ export const AuthPage = () => {
           description: "Добро пожаловать!",
         });
       } else {
-        // Check referral code validity if provided
-        let hasAccess = false;
-        if (data.referralCode) {
-          const { data: referralData, error: referralError } = await supabase
-            .from('referrals')
-            .select('*')
-            .eq('referral_code', data.referralCode)
-            .single();
-
-          if (referralError) {
-            throw new Error("Недопустимый код приглашения");
-          }
-
-          // Check if the referrer has at least 3 completed referrals
-          const { count: referralCount } = await supabase
-            .from('referrals')
-            .select('*', { count: 'exact', head: true })
-            .eq('referrer_id', referralData.referrer_id)
-            .eq('status', 'completed');
-
-          hasAccess = referralCount >= 3;
-        }
-
-        const { error, data: authData } = await supabase.auth.signUp({
+        const { error } = await supabase.auth.signUp({
           email: data.email,
           password: data.password,
           options: {
             data: {
               username: data.username,
-              referralCode: data.referralCode,
-              hasAccess,
             },
             emailRedirectTo: window.location.origin,
           },
         });
         
         if (error) throw error;
-
-        // Update referral status if a valid referral code was used
-        if (data.referralCode) {
-          await supabase
-            .from('referrals')
-            .update({ 
-              referred_user_id: authData.user?.id,
-              status: 'completed' 
-            })
-            .eq('referral_code', data.referralCode);
-
-          // Update user's access in profiles table
-          await supabase
-            .from('profiles')
-            .update({ has_access: hasAccess })
-            .eq('id', authData.user?.id);
-        }
         
         toast({
           title: "Регистрация успешна",
-          description: hasAccess 
-            ? "Вы получили доступ!" 
-            : "ВАЖНО: Сохраните ваши учетные данные. Восстановление пароля невозможно!",
+          description: "ВАЖНО: Сохраните ваши учетные данные. Восстановление пароля невозможно!",
         });
       }
     } catch (error: any) {
@@ -129,24 +84,14 @@ export const AuthPage = () => {
         
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {!isLogin && (
-            <>
-              <div>
-                <Input
-                  placeholder="Имя пользователя"
-                  className="bg-black/50 border-white/20 text-white"
-                  {...register('username', { required: !isLogin })}
-                />
-                {errors.username && <p className="text-red-500 text-xs mt-1">Это поле обязательно</p>}
-              </div>
-
-              <div>
-                <Input
-                  placeholder="Код приглашения (необязательно)"
-                  className="bg-black/50 border-white/20 text-white"
-                  {...register('referralCode')}
-                />
-              </div>
-            </>
+            <div>
+              <Input
+                placeholder="Имя пользователя"
+                className="bg-black/50 border-white/20 text-white"
+                {...register('username', { required: !isLogin })}
+              />
+              {errors.username && <p className="text-red-500 text-xs mt-1">Это поле обязательно</p>}
+            </div>
           )}
           
           <div>

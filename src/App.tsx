@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -20,15 +19,6 @@ const App = () => {
   const [showDonation, setShowDonation] = useState(false);
   
   useEffect(() => {
-    // Check for referral code in URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const referralCode = urlParams.get('ref');
-
-    if (referralCode) {
-      // Store referral code in localStorage for signup process
-      localStorage.setItem('referralCode', referralCode);
-    }
-
     trackVisit().catch(err => console.error("Failed to track visit:", err));
     
     const timer = setTimeout(() => {
