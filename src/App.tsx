@@ -1,9 +1,9 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthLayout } from "./components/auth/AuthLayout";
 import Index from "./pages/Index";
 import Reviews from "./pages/Reviews";
 import Admin from "./pages/Admin";
@@ -19,10 +19,8 @@ const App = () => {
   const [showDonation, setShowDonation] = useState(false);
   
   useEffect(() => {
-    // Initialize user tracking
     trackVisit().catch(err => console.error("Failed to track visit:", err));
     
-    // Show loading screen for 6 seconds (increased to allow animation to complete)
     const timer = setTimeout(() => {
       setLoading(false);
     }, 6000);
@@ -31,24 +29,20 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    if (loading) return; // Don't start popup cycle during loading screen
+    if (loading) return;
     
-    // Function to handle donation popup visibility
     const handleDonationPopup = () => {
       setShowDonation(true);
       
-      // Show popup for 5 seconds
       setTimeout(() => {
         setShowDonation(false);
       }, 5000);
     };
     
-    // Show popup initially after a delay
     const initialDelay = setTimeout(() => {
       handleDonationPopup();
-    }, 3000); // Show first time after 3 seconds
+    }, 3000);
     
-    // Set up recurring popup every 6 seconds
     const popupInterval = setInterval(handleDonationPopup, 6000);
     
     return () => {
@@ -67,11 +61,13 @@ const App = () => {
         ) : (
           <>
             <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/reviews" element={<Reviews />} />
-                <Route path="/ak" element={<Admin />} />
-              </Routes>
+              <AuthLayout>
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/reviews" element={<Reviews />} />
+                  <Route path="/ak" element={<Admin />} />
+                </Routes>
+              </AuthLayout>
             </BrowserRouter>
             <DonationPopup isVisible={showDonation} />
           </>
