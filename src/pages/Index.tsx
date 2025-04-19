@@ -13,7 +13,6 @@ import { Smartphone, Laptop, Monitor, Users, Key, Zap, MessageSquare } from "luc
 import { useToast } from "@/hooks/use-toast";
 import { trackVisit, trackConnectionClick, getStats } from "@/lib/supabase";
 import { Link } from "react-router-dom";
-import { BackgroundAnimation } from "@/components/BackgroundAnimation";
 
 const platforms = [
   {
@@ -155,18 +154,16 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-vpn-dark relative overflow-hidden">
-      <BackgroundAnimation className="absolute inset-0 z-0" />
-      
       <div className="absolute inset-0 z-0">
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{ 
             backgroundImage: 'url(/lovable-uploads/f086c916-cb2f-4633-88ad-f94621e7f7ba.png)',
             backgroundSize: 'cover',
-            opacity: 0.2
+            opacity: 0.4
           }} 
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-vpn-dark via-vpn-blue/10 to-vpn-dark opacity-80" />
+        <div className="absolute inset-0 bg-gradient-to-br from-vpn-dark via-vpn-blue/20 to-vpn-dark opacity-80" />
       </div>
 
       <div className="relative z-10 w-full bg-black/40 backdrop-blur-sm border-b border-white/10">
