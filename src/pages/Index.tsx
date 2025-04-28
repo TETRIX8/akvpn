@@ -10,10 +10,12 @@ import { SupportForm } from "@/components/SupportForm";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Card } from "@/components/ui/card";
-import { Smartphone, Laptop, Monitor, Users, Key, Zap, MessageSquare } from "lucide-react";
+import { Smartphone, Laptop, Monitor, Users, Key, Zap, MessageSquare, Rocket } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { trackVisit, trackConnectionClick, getStats } from "@/lib/supabase";
 import { Link } from "react-router-dom";
+import { OnboardingFlow } from "@/components/OnboardingFlow";
+import { detectDeviceType, getDeviceDisplayName, getRecommendedApp } from "@/utils/deviceDetection";
 
 const platforms = [
   {
@@ -40,8 +42,14 @@ const Index = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isFirstVisit, setIsFirstVisit] = useState(true);
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [deviceType, setDeviceType] = useState(detectDeviceType());
   const isMobile = useIsMobile();
   const { toast } = useToast();
+  
+  useEffect(() => {
+    setDeviceType(detectDeviceType());
+  }, []);
 
   useEffect(() => {
     const hasVisited = localStorage.getItem('hasVisited');
@@ -87,12 +95,12 @@ const Index = () => {
     }
 
     toast({
-      title: "Новый способ подключения!",
-      description: "Теперь доступно подключение через Outline VPN",
-      duration: 2000,
+      title: `Обнаружено устройство: ${getDeviceDisplayName(deviceType)}`,
+      description: "Мы подготовили для вас оптимальные настройки",
+      duration: 3000,
       className: "animate-fade-in",
     });
-  }, [toast]);
+  }, [toast, deviceType]);
 
   const handleKeySelect = (key: string) => {
     setSelectedKey(key);
@@ -148,6 +156,13 @@ const Index = () => {
       console.error("Error connecting to Outline:", error);
     }
   };
+  
+  const startOnboarding = () => {
+    setShowOnboarding(true);
+    localStorage.removeItem("onboardingStep");
+  };
+  
+  const recommendedApp = getRecommendedApp(deviceType);
 
   if (isFirstVisit || isLoading) {
     return <LoadingScreen />;
@@ -167,7 +182,7 @@ const Index = () => {
         <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800/20 to-black opacity-90" />
       </div>
       
-      {/* Sun-like decorative element to replace the WebGLSun */}
+      {/* Sun-like decorative element */}
       <div className="absolute top-0 right-0 w-60 h-60 md:w-80 md:h-80 overflow-hidden pointer-events-none z-10 opacity-75">
         <div className="absolute inset-0">
           <div className="absolute w-full h-full rounded-full bg-amber-500 opacity-80 blur-xl"></div>
@@ -187,9 +202,13 @@ const Index = () => {
                   <span>{visitors} посетителей</span>
                 </div>
               </div>
+              <div className="flex items-center gap-1 md:gap-2">
+                <div className="w-1.5 md:w-2 h-1.5 md:h-2 bg-amber-500 rounded-full" />
+                <span>{getDeviceDisplayName(deviceType)}</span>
+              </div>
             </div>
             <div className="flex flex-wrap justify-center gap-2 md:gap-4">
-              {Object.entries(keyStats).slice(0, 3).map(([key, count], index) => (
+              {Object.entries(keyStats).slice(0, isMobile ? 1 : 3).map(([key, count], index) => (
                 <div key={index} className="flex items-center gap-1 md:gap-2">
                   <Key className="w-3.5 h-3.5 text-vpn-blue" />
                   <span>Ключ {index + 1}: {count} выборов</span>
@@ -219,10 +238,30 @@ const Index = () => {
             Настройте VPN за 2 простых шага
           </h2>
           <HorrorText />
+          
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mt-6">
+            <Button
+              onClick={startOnboarding}
+              className="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white px-6 py-4 rounded-full"
+              style={{
+                textShadow: '0 0 10px rgba(220, 38, 38, 0.8)',
+                boxShadow: '0 0 15px rgba(220, 38, 38, 0.4)'
+              }}
+            >
+              <Rocket className="mr-2 h-5 w-5" />
+              Быстрая настройка
+            </Button>
+          </div>
+          
+          <div className="mt-4 bg-amber-500/10 p-3 rounded-lg inline-block">
+            <p className="text-amber-400 text-sm">
+              Обнаружено устройство: <span className="font-bold">{getDeviceDisplayName(deviceType)}</span>
+            </p>
+          </div>
         </section>
 
         <div className="space-y-8 md:space-y-12 max-w-4xl mx-auto">
-          <SetupInstructions />
+          <SetupInstructions selectedPlatform={deviceType} />
           <VPNKeys onKeySelect={handleKeySelect} />
 
           {selectedKey && (
@@ -235,13 +274,22 @@ const Index = () => {
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {platforms.map((platform) => (
-                    <Card key={platform.name} className="p-4 bg-black/30 backdrop-blur-sm border-white/10 hover:bg-white/5 transition-all duration-300">
+                    <Card 
+                      key={platform.name} 
+                      className={`p-4 ${platform.app === recommendedApp ? 'bg-amber-500/20' : 'bg-black/30'} backdrop-blur-sm border-white/10 hover:bg-white/5 transition-all duration-300`}
+                    >
                       <div className="space-y-4">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2 text-white">
                             {platform.icon}
                             <h3 className="font-semibold">{platform.name}</h3>
                           </div>
+                          
+                          {platform.app === recommendedApp && (
+                            <span className="text-xs font-medium text-white/90 bg-amber-500/20 px-2 py-1 rounded-full">
+                              Рекомендуется
+                            </span>
+                          )}
                           
                           {platformStats[platform.app] > 0 && (
                             <span className="text-xs font-medium text-white/90 bg-amber-500/20 px-2 py-1 rounded-full">
@@ -251,7 +299,7 @@ const Index = () => {
                         </div>
                         <Button
                           onClick={() => handleConnect(platform.app)}
-                          className="w-full bg-amber-500 hover:bg-amber-600 text-black"
+                          className={`w-full ${platform.app === recommendedApp ? 'bg-amber-500 hover:bg-amber-600 text-black' : 'bg-vpn-blue hover:bg-vpn-blue/90'}`}
                         >
                           Подключиться
                         </Button>
@@ -339,6 +387,8 @@ const Index = () => {
           </p>
         </footer>
       </div>
+      
+      {showOnboarding && <OnboardingFlow />}
     </div>
   );
 };

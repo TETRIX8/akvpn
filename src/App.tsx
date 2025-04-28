@@ -10,6 +10,7 @@ import { useState, useEffect } from "react";
 import { LoadingScreen } from "./components/LoadingScreen";
 import { DonationPopup } from "./components/DonationPopup";
 import { trackVisit } from "./lib/supabase";
+import { detectDeviceType } from "./utils/deviceDetection";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +26,10 @@ const App = () => {
     const timer = setTimeout(() => {
       setLoading(false);
     }, 4000);
+    
+    // Set device type as a data attribute on HTML element
+    const deviceType = detectDeviceType();
+    document.documentElement.setAttribute('data-device', deviceType);
     
     return () => clearTimeout(timer);
   }, []);

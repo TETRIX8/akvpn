@@ -1,8 +1,15 @@
+
 #root {
-  max-width: 1280px;
+  max-width: 100%;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 0;
   text-align: center;
+}
+
+@media (max-width: 640px) {
+  #root {
+    padding: 0;
+  }
 }
 
 .logo {
@@ -39,4 +46,71 @@
 
 .read-the-docs {
   color: #888;
+}
+
+/* Mobile responsive utilities */
+@media (max-width: 640px) {
+  .mobile-full-width {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+  
+  .mobile-stack {
+    flex-direction: column !important;
+  }
+  
+  .mobile-center {
+    justify-content: center !important;
+    text-align: center !important;
+  }
+  
+  .mobile-text-sm {
+    font-size: 0.875rem !important;
+  }
+  
+  .mobile-mt-4 {
+    margin-top: 1rem !important;
+  }
+}
+
+/* Device specific tweaks */
+.ios-specific {
+  display: none;
+}
+
+.android-specific {
+  display: none;
+}
+
+.windows-specific {
+  display: none;
+}
+
+.ios .ios-specific,
+.macos .ios-specific {
+  display: block;
+}
+
+.android .android-specific {
+  display: block;
+}
+
+.windows .windows-specific {
+  display: block;
+}
+
+/* Add device class to body */
+html[data-device="ios"] body,
+html[data-device="macos"] body {
+  --device-color: rgba(0, 122, 255, 0.1);
+}
+
+html[data-device="android"] body {
+  --device-color: rgba(164, 198, 57, 0.1);
+}
+
+html[data-device="windows"] body {
+  --device-color: rgba(0, 120, 215, 0.1);
 }
