@@ -1,13 +1,12 @@
 
 import React, { useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 
 const Sun = () => {
   const meshRef = useRef<THREE.Mesh>(null);
   
-  useFrame((state) => {
+  useFrame(() => {
     if (!meshRef.current) return;
     meshRef.current.rotation.y += 0.003;
     meshRef.current.rotation.x += 0.001;
@@ -16,34 +15,10 @@ const Sun = () => {
   return (
     <mesh ref={meshRef}>
       <sphereGeometry args={[3, 32, 32]} />
-      <meshStandardMaterial 
+      <meshBasicMaterial 
         color="#ff9500"
         emissive="#ff4d00"
         emissiveIntensity={0.5}
-        roughness={0.7}
-        metalness={0.3}
-      />
-    </mesh>
-  );
-};
-
-const SunRays = () => {
-  const meshRef = useRef<THREE.Mesh>(null);
-  
-  useFrame((state) => {
-    if (!meshRef.current) return;
-    meshRef.current.rotation.z += 0.001;
-  });
-
-  return (
-    <mesh ref={meshRef} scale={1.2}>
-      <ringGeometry args={[3.5, 4, 64]} />
-      <meshStandardMaterial 
-        color="#ff5500"
-        emissive="#ff3300"
-        emissiveIntensity={1}
-        transparent={true}
-        opacity={0.6}
       />
     </mesh>
   );
@@ -53,12 +28,30 @@ const SunGlow = () => {
   return (
     <mesh>
       <sphereGeometry args={[3.5, 32, 32]} />
-      <meshStandardMaterial
+      <meshBasicMaterial
         color="#ff9500"
-        emissive="#ff7300"
-        emissiveIntensity={0.8}
         transparent={true}
         opacity={0.2}
+      />
+    </mesh>
+  );
+};
+
+const SunRays = () => {
+  const meshRef = useRef<THREE.Mesh>(null);
+  
+  useFrame(() => {
+    if (!meshRef.current) return;
+    meshRef.current.rotation.z += 0.001;
+  });
+
+  return (
+    <mesh ref={meshRef} scale={1.2}>
+      <circleGeometry args={[4, 32]} />
+      <meshBasicMaterial 
+        color="#ff5500"
+        transparent={true}
+        opacity={0.6}
       />
     </mesh>
   );
