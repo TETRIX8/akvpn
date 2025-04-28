@@ -17,8 +17,6 @@ const Sun = () => {
       <sphereGeometry args={[3, 32, 32]} />
       <meshBasicMaterial 
         color="#ff9500"
-        emissive="#ff4d00"
-        emissiveIntensity={0.5}
       />
     </mesh>
   );
