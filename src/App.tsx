@@ -59,21 +59,23 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        {loading ? (
-          <LoadingScreen />
-        ) : (
-          <>
-            <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/reviews" element={<Reviews />} />
-              </Routes>
-            </BrowserRouter>
-            <DonationPopup isVisible={showDonation} />
-          </>
-        )}
+        <div className="dark">
+          <Toaster />
+          <Sonner />
+          {loading ? (
+            <LoadingScreen />
+          ) : (
+            <>
+              <BrowserRouter>
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/reviews" element={<Reviews />} />
+                </Routes>
+              </BrowserRouter>
+              <DonationPopup isVisible={showDonation} />
+            </>
+          )}
+        </div>
       </TooltipProvider>
     </QueryClientProvider>
   );

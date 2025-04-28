@@ -5,24 +5,24 @@
 
 @layer base {
   :root {
-    --background: 140 50% 97%;
-    --foreground: 210 40% 20%;
-    --card: 0 0% 100%;
-    --card-foreground: 210 40% 20%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 210 40% 20%;
+    --background: 222 47% 11%;
+    --foreground: 0 0% 98%;
+    --card: 222 47% 11%;
+    --card-foreground: 0 0% 98%;
+    --popover: 222 47% 11%;
+    --popover-foreground: 0 0% 98%;
     --primary: 142 76% 36%;
     --primary-foreground: 355 100% 100%;
-    --secondary: 172 40% 88%;
-    --secondary-foreground: 210 40% 20%;
-    --muted: 172 40% 93%;
-    --muted-foreground: 215 20.2% 45.1%;
+    --secondary: 214 9% 19%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 214 9% 19%;
+    --muted-foreground: 215 20.2% 75.1%;
     --accent: 187 60% 40%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
+    --border: 214 9% 15%;
+    --input: 214 9% 15%;
     --ring: 142 76% 36%;
     --radius: 0.5rem;
   }
@@ -46,7 +46,7 @@
 
 @layer utilities {
   .glass-card {
-    @apply backdrop-blur-md bg-white/5 border border-white/10 shadow-lg;
+    @apply backdrop-blur-md bg-black/20 border border-white/10 shadow-lg;
   }
   
   .glow-effect {
@@ -95,15 +95,19 @@
   }
 
   .spring-gradient {
-    @apply bg-gradient-to-br from-green-400 via-teal-300 to-emerald-500;
+    @apply bg-gradient-to-br from-orange-400 via-amber-300 to-yellow-500;
   }
   
   .spring-card {
-    @apply backdrop-blur-md bg-white/70 border border-green-200 shadow-md;
+    @apply backdrop-blur-md bg-black/30 border border-orange-800/30 shadow-md;
   }
   
   .spring-text {
-    @apply bg-gradient-to-r from-green-600 via-teal-500 to-emerald-600 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-orange-400 via-amber-300 to-yellow-500 bg-clip-text text-transparent;
+  }
+
+  .neo-blur {
+    @apply backdrop-blur-2xl bg-black/40 border border-white/10;
   }
 }
 

@@ -13,6 +13,7 @@ import { Smartphone, Laptop, Monitor, Users, Key, Zap, MessageSquare } from "luc
 import { useToast } from "@/hooks/use-toast";
 import { trackVisit, trackConnectionClick, getStats } from "@/lib/supabase";
 import { Link } from "react-router-dom";
+import { WebGLSun } from "@/components/WebGLSun";
 
 const platforms = [
   {
@@ -153,20 +154,22 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-vpn-dark relative overflow-hidden">
+    <div className="min-h-screen bg-black relative overflow-hidden">
       <div className="absolute inset-0 z-0">
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{ 
             backgroundImage: 'url(/lovable-uploads/f086c916-cb2f-4633-88ad-f94621e7f7ba.png)',
             backgroundSize: 'cover',
-            opacity: 0.4
+            opacity: 0.15
           }} 
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-vpn-dark via-vpn-blue/20 to-vpn-dark opacity-80" />
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800/20 to-black opacity-90" />
       </div>
 
-      <div className="relative z-10 w-full bg-black/40 backdrop-blur-sm border-b border-white/10">
+      <WebGLSun position="top-right" />
+
+      <div className="relative z-10 w-full bg-black/80 backdrop-blur-sm border-b border-white/10">
         <div className="container mx-auto px-3 md:px-4 py-2">
           <div className="flex flex-wrap justify-center md:justify-between items-center gap-2 md:gap-4 text-xs md:text-sm text-white/80">
             <div className="flex items-center gap-2 md:gap-4">
@@ -216,16 +219,16 @@ const Index = () => {
           <VPNKeys onKeySelect={handleKeySelect} />
 
           {selectedKey && (
-            <section className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-vpn-blue/20 to-purple-600/20 p-4 md:p-8 border border-white/10 animate-fade-in">
-              <div className="absolute inset-0 bg-vpn-dark/40 backdrop-blur-sm" />
+            <section className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-gray-800/50 to-gray-700/30 p-4 md:p-8 border border-white/10 animate-fade-in">
+              <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
               <div className="relative z-10">
-                <h2 className="text-2xl font-horror text-red-600 text-center mb-6"
-                    style={{ textShadow: '0 0 10px rgba(220, 38, 38, 0.8)' }}>
+                <h2 className="text-2xl font-horror text-amber-500 text-center mb-6"
+                    style={{ textShadow: '0 0 10px rgba(245, 158, 11, 0.6)' }}>
                   Подключение
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {platforms.map((platform) => (
-                    <Card key={platform.name} className="p-4 bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300">
+                    <Card key={platform.name} className="p-4 bg-black/30 backdrop-blur-sm border-white/10 hover:bg-white/5 transition-all duration-300">
                       <div className="space-y-4">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2 text-white">
@@ -234,14 +237,14 @@ const Index = () => {
                           </div>
                           
                           {platformStats[platform.app] > 0 && (
-                            <span className="text-xs font-medium text-white/90 bg-vpn-blue/30 px-2 py-1 rounded-full">
+                            <span className="text-xs font-medium text-white/90 bg-amber-500/20 px-2 py-1 rounded-full">
                               {platformStats[platform.app]} подключений
                             </span>
                           )}
                         </div>
                         <Button
                           onClick={() => handleConnect(platform.app)}
-                          className="w-full bg-vpn-blue hover:bg-vpn-blue/90"
+                          className="w-full bg-amber-500 hover:bg-amber-600 text-black"
                         >
                           Подключиться
                         </Button>
@@ -253,8 +256,8 @@ const Index = () => {
             </section>
           )}
 
-          <section className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-500/20 to-teal-600/20 p-4 md:p-8 border border-white/10 animate-fade-in">
-            <div className="absolute inset-0 bg-vpn-dark/40 backdrop-blur-sm" />
+          <section className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-amber-500/20 to-orange-600/20 p-4 md:p-8 border border-white/10 animate-fade-in">
+            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
             <div className="relative z-10 space-y-6">
               <div className="flex flex-col md:flex-row items-center gap-6">
                 <div className="w-24 h-24 md:w-32 md:h-32">
@@ -266,12 +269,12 @@ const Index = () => {
                 </div>
                 <div className="flex-1 text-center md:text-left">
                   <div className="flex items-center justify-center md:justify-start gap-2 mb-2">
-                    <h2 className="text-2xl md:text-3xl font-bold text-emerald-400">
+                    <h2 className="text-2xl md:text-3xl font-bold text-amber-400">
                       Outline VPN
                     </h2>
                     
                     {platformStats["outline"] > 0 && (
-                      <span className="text-xs font-medium text-white/90 bg-emerald-500/30 px-2 py-1 rounded-full">
+                      <span className="text-xs font-medium text-white/90 bg-amber-500/30 px-2 py-1 rounded-full">
                         {platformStats["outline"]} подключений
                       </span>
                     )}
@@ -281,7 +284,7 @@ const Index = () => {
                   </p>
                   <Button
                     onClick={handleOutlineConnect}
-                    className="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3 rounded-full transition-all duration-300 shadow-lg hover:shadow-emerald-500/25"
+                    className="bg-amber-500 hover:bg-amber-600 text-black px-6 py-3 rounded-full transition-all duration-300 shadow-lg hover:shadow-amber-500/25"
                   >
                     Подключиться через Outline
                   </Button>
