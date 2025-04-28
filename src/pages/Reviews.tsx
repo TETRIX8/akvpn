@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
@@ -6,7 +7,6 @@ import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Star, ChevronLeft } from "lucide-react";
 import { Link } from "react-router-dom";
-import { ReviewsAnimation } from "@/components/ReviewsAnimation";
 
 type Review = {
   id: string;
@@ -113,14 +113,20 @@ const Reviews = () => {
   };
 
   return (
-    <div className="min-h-screen bg-spring-light relative overflow-hidden">
-      {/* WebGL Reviews Animation */}
-      <ReviewsAnimation className="absolute inset-0 z-0" />
-      
-      {/* Overlay with Spring Pattern */}
-      <div className="absolute inset-0 bg-gradient-to-br from-spring-light via-spring-secondary/10 to-spring-accent/10 opacity-90 bg-spring-pattern z-10" />
-      
-      <div className="container mx-auto px-3 md:px-4 pt-6 pb-16 relative z-20">
+    <div className="min-h-screen bg-vpn-dark relative overflow-hidden">
+      <div className="absolute inset-0 z-0">
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ 
+            backgroundImage: 'url(/lovable-uploads/f086c916-cb2f-4633-88ad-f94621e7f7ba.png)',
+            backgroundSize: 'cover',
+            opacity: 0.4
+          }} 
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-vpn-dark via-purple-600/20 to-vpn-dark opacity-80" />
+      </div>
+
+      <div className="container mx-auto px-3 md:px-4 pt-6 pb-16 relative z-10">
         <Link to="/" className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-6 transition-all hover:translate-x-[-5px]">
           <ChevronLeft className="w-5 h-5" />
           <span>Вернуться на главную</span>
