@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { AnimatedTitle } from "@/components/AnimatedTitle";
 import { SetupInstructions } from "@/components/SetupInstructions";
@@ -13,7 +14,6 @@ import { Smartphone, Laptop, Monitor, Users, Key, Zap, MessageSquare } from "luc
 import { useToast } from "@/hooks/use-toast";
 import { trackVisit, trackConnectionClick, getStats } from "@/lib/supabase";
 import { Link } from "react-router-dom";
-import { WebGLSun } from "@/components/WebGLSun";
 
 const platforms = [
   {
@@ -166,8 +166,15 @@ const Index = () => {
         />
         <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800/20 to-black opacity-90" />
       </div>
-
-      <WebGLSun position="top-right" />
+      
+      {/* Sun-like decorative element to replace the WebGLSun */}
+      <div className="absolute top-0 right-0 w-60 h-60 md:w-80 md:h-80 overflow-hidden pointer-events-none z-10 opacity-75">
+        <div className="absolute inset-0">
+          <div className="absolute w-full h-full rounded-full bg-amber-500 opacity-80 blur-xl"></div>
+          <div className="absolute w-[80%] h-[80%] top-[10%] left-[10%] rounded-full bg-orange-500 animate-pulse-glow"></div>
+          <div className="absolute w-[60%] h-[60%] top-[20%] left-[20%] rounded-full bg-yellow-500 animate-pulse"></div>
+        </div>
+      </div>
 
       <div className="relative z-10 w-full bg-black/80 backdrop-blur-sm border-b border-white/10">
         <div className="container mx-auto px-3 md:px-4 py-2">
