@@ -9,13 +9,11 @@ import { LoadingScreen } from "@/components/LoadingScreen";
 import { SupportForm } from "@/components/SupportForm";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useDeviceDetection } from "@/hooks/use-device-detection";
 import { Card } from "@/components/ui/card";
-import { Smartphone, Laptop, Monitor, Users, Key, Zap, MessageSquare, Sparkles } from "lucide-react";
+import { Smartphone, Laptop, Monitor, Users, Key, Zap, MessageSquare } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { trackVisit, trackConnectionClick, getStats } from "@/lib/supabase";
 import { Link } from "react-router-dom";
-import { OnboardingFlow } from "@/components/OnboardingFlow";
 
 const platforms = [
   {
@@ -42,9 +40,7 @@ const Index = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isFirstVisit, setIsFirstVisit] = useState(true);
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
-  const [showOnboarding, setShowOnboarding] = useState(false);
   const isMobile = useIsMobile();
-  const { device } = useDeviceDetection();
   const { toast } = useToast();
 
   useEffect(() => {
@@ -153,26 +149,6 @@ const Index = () => {
     }
   };
 
-  const getRecommendedApp = () => {
-    switch (device) {
-      case "ios":
-      case "macos":
-        return "streisand";
-      case "android":
-        return "v2raytun";
-      case "windows":
-        return "hiddify";
-      default:
-        return null;
-    }
-  };
-
-  const recommendedApp = getRecommendedApp();
-  const deviceName = device === "ios" ? "iOS" : 
-                    device === "android" ? "Android" : 
-                    device === "windows" ? "Windows" : 
-                    device === "macos" ? "macOS" : "устройство";
-
   if (isFirstVisit || isLoading) {
     return <LoadingScreen />;
   }
@@ -243,21 +219,6 @@ const Index = () => {
             Настройте VPN за 2 простых шага
           </h2>
           <HorrorText />
-          
-          {device !== "unknown" && (
-            <div className="animate-fade-in mt-6">
-              <Button 
-                onClick={() => setShowOnboarding(true)}
-                className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-black font-bold px-8 py-4 rounded-full shadow-lg transform transition-all duration-300 hover:scale-105 hover:shadow-orange-500/50"
-              >
-                <Sparkles className="mr-2 w-5 h-5" />
-                Быстрая настройка для {deviceName}
-              </Button>
-              <p className="text-xs text-amber-300/80 mt-2">
-                Обнаружено устройство: {deviceName}
-              </p>
-            </div>
-          )}
         </section>
 
         <div className="space-y-8 md:space-y-12 max-w-4xl mx-auto">
@@ -274,7 +235,7 @@ const Index = () => {
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {platforms.map((platform) => (
-                    <Card key={platform.name} className={`p-4 bg-black/30 backdrop-blur-sm border-white/10 hover:bg-white/5 transition-all duration-300 ${recommendedApp === platform.app ? 'ring-2 ring-amber-500 ring-offset-2 ring-offset-black' : ''}`}>
+                    <Card key={platform.name} className="p-4 bg-black/30 backdrop-blur-sm border-white/10 hover:bg-white/5 transition-all duration-300">
                       <div className="space-y-4">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2 text-white">
@@ -288,15 +249,9 @@ const Index = () => {
                             </span>
                           )}
                         </div>
-                        {recommendedApp === platform.app && (
-                          <div className="flex items-center gap-1 text-amber-400 text-xs mb-2">
-                            <Sparkles className="w-3 h-3" />
-                            <span>Рекомендуется для вашего устройства</span>
-                          </div>
-                        )}
                         <Button
                           onClick={() => handleConnect(platform.app)}
-                          className={`w-full ${recommendedApp === platform.app ? 'bg-amber-500 hover:bg-amber-600 text-black' : 'bg-vpn-blue hover:bg-vpn-blue/90'}`}
+                          className="w-full bg-amber-500 hover:bg-amber-600 text-black"
                         >
                           Подключиться
                         </Button>
@@ -384,8 +339,6 @@ const Index = () => {
           </p>
         </footer>
       </div>
-
-      {showOnboarding && <OnboardingFlow />}
     </div>
   );
 };
