@@ -318,117 +318,6 @@ export type Database = {
         }
         Relationships: []
       }
-      movie_room_messages: {
-        Row: {
-          created_at: string | null
-          id: string
-          is_system_message: boolean | null
-          message: string
-          room_code: string
-          sender_nickname: string
-        }
-        Insert: {
-          created_at?: string | null
-          id?: string
-          is_system_message?: boolean | null
-          message: string
-          room_code: string
-          sender_nickname: string
-        }
-        Update: {
-          created_at?: string | null
-          id?: string
-          is_system_message?: boolean | null
-          message?: string
-          room_code?: string
-          sender_nickname?: string
-        }
-        Relationships: []
-      }
-      movie_rooms: {
-        Row: {
-          created_at: string
-          creator_id: string | null
-          id: string
-          is_active: boolean
-          movie_id: number
-          movie_iframe_url: string
-          movie_name: string
-          movie_poster: string | null
-          movie_type: string | null
-          movie_year: number | null
-          password: string | null
-          room_code: string
-        }
-        Insert: {
-          created_at?: string
-          creator_id?: string | null
-          id?: string
-          is_active?: boolean
-          movie_id: number
-          movie_iframe_url: string
-          movie_name: string
-          movie_poster?: string | null
-          movie_type?: string | null
-          movie_year?: number | null
-          password?: string | null
-          room_code: string
-        }
-        Update: {
-          created_at?: string
-          creator_id?: string | null
-          id?: string
-          is_active?: boolean
-          movie_id?: number
-          movie_iframe_url?: string
-          movie_name?: string
-          movie_poster?: string | null
-          movie_type?: string | null
-          movie_year?: number | null
-          password?: string | null
-          room_code?: string
-        }
-        Relationships: []
-      }
-      playback_states: {
-        Row: {
-          id: string
-          is_playing: boolean
-          last_updated: string
-          playback_time: number
-          room_id: string
-        }
-        Insert: {
-          id?: string
-          is_playing?: boolean
-          last_updated?: string
-          playback_time?: number
-          room_id: string
-        }
-        Update: {
-          id?: string
-          is_playing?: boolean
-          last_updated?: string
-          playback_time?: number
-          room_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "playback_states_room_id_fkey"
-            columns: ["room_id"]
-            isOneToOne: false
-            referencedRelation: "active_rooms"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "playback_states_room_id_fkey"
-            columns: ["room_id"]
-            isOneToOne: false
-            referencedRelation: "movie_rooms"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       profiles: {
         Row: {
           created_at: string
@@ -484,89 +373,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
-      }
-      publication_authors: {
-        Row: {
-          avatar_url: string | null
-          created_at: string | null
-          id: string
-          name: string
-          publication_id: string | null
-          role: string | null
-          user_id: string | null
-        }
-        Insert: {
-          avatar_url?: string | null
-          created_at?: string | null
-          id?: string
-          name: string
-          publication_id?: string | null
-          role?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          avatar_url?: string | null
-          created_at?: string | null
-          id?: string
-          name?: string
-          publication_id?: string | null
-          role?: string | null
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "publication_authors_publication_id_fkey"
-            columns: ["publication_id"]
-            isOneToOne: false
-            referencedRelation: "publications"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      publications: {
-        Row: {
-          abstract: string
-          author_id: string | null
-          category: string
-          comments_count: number | null
-          content: string
-          cover_image: string | null
-          created_at: string | null
-          date: string
-          id: string
-          saved: boolean | null
-          tags: string[] | null
-          title: string
-        }
-        Insert: {
-          abstract: string
-          author_id?: string | null
-          category: string
-          comments_count?: number | null
-          content: string
-          cover_image?: string | null
-          created_at?: string | null
-          date?: string
-          id?: string
-          saved?: boolean | null
-          tags?: string[] | null
-          title: string
-        }
-        Update: {
-          abstract?: string
-          author_id?: string | null
-          category?: string
-          comments_count?: number | null
-          content?: string
-          cover_image?: string | null
-          created_at?: string | null
-          date?: string
-          id?: string
-          saved?: boolean | null
-          tags?: string[] | null
-          title?: string
-        }
-        Relationships: []
       }
       referrals: {
         Row: {
@@ -633,48 +439,6 @@ export type Database = {
           rating?: number
         }
         Relationships: []
-      }
-      room_participants: {
-        Row: {
-          id: string
-          is_leader: boolean
-          joined_at: string
-          nickname: string
-          room_id: string
-          user_id: string | null
-        }
-        Insert: {
-          id?: string
-          is_leader?: boolean
-          joined_at?: string
-          nickname: string
-          room_id: string
-          user_id?: string | null
-        }
-        Update: {
-          id?: string
-          is_leader?: boolean
-          joined_at?: string
-          nickname?: string
-          room_id?: string
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "room_participants_room_id_fkey"
-            columns: ["room_id"]
-            isOneToOne: false
-            referencedRelation: "active_rooms"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "room_participants_room_id_fkey"
-            columns: ["room_id"]
-            isOneToOne: false
-            referencedRelation: "movie_rooms"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       saved_movies: {
         Row: {
@@ -970,27 +734,6 @@ export type Database = {
         }
         Relationships: []
       }
-      voice_chat_participants: {
-        Row: {
-          id: string
-          joined_at: string | null
-          participant_nickname: string
-          room_code: string
-        }
-        Insert: {
-          id?: string
-          joined_at?: string | null
-          participant_nickname: string
-          room_code: string
-        }
-        Update: {
-          id?: string
-          joined_at?: string | null
-          participant_nickname?: string
-          room_code?: string
-        }
-        Relationships: []
-      }
       watch_history: {
         Row: {
           id: string
@@ -1031,24 +774,13 @@ export type Database = {
       }
     }
     Views: {
-      active_rooms: {
-        Row: {
-          created_at: string | null
-          has_password: boolean | null
-          id: string | null
-          movie_name: string | null
-          movie_poster: string | null
-          movie_type: string | null
-          movie_year: number | null
-          room_code: string | null
-          viewer_count: number | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
       generate_referral_code: {
-        Args: { user_id: string }
+        Args: {
+          user_id: string
+        }
         Returns: string
       }
     }
@@ -1063,29 +795,27 @@ export type Database = {
   }
 }
 
-type DefaultSchema = Database[Extract<keyof Database, "public">]
+type PublicSchema = Database[Extract<keyof Database, "public">]
 
 export type Tables<
-  DefaultSchemaTableNameOrOptions extends
-    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+  PublicTableNameOrOptions extends
+    | keyof (PublicSchema["Tables"] & PublicSchema["Views"])
     | { schema: keyof Database },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof Database
-  }
-    ? keyof (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-        Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+    ? keyof (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
+        Database[PublicTableNameOrOptions["schema"]]["Views"])
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
-  ? (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-      Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+> = PublicTableNameOrOptions extends { schema: keyof Database }
+  ? (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
+      Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
       Row: infer R
     }
     ? R
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])
-    ? (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+  : PublicTableNameOrOptions extends keyof (PublicSchema["Tables"] &
+        PublicSchema["Views"])
+    ? (PublicSchema["Tables"] &
+        PublicSchema["Views"])[PublicTableNameOrOptions] extends {
         Row: infer R
       }
       ? R
@@ -1093,22 +823,20 @@ export type Tables<
     : never
 
 export type TablesInsert<
-  DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
+  PublicTableNameOrOptions extends
+    | keyof PublicSchema["Tables"]
     | { schema: keyof Database },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof Database
-  }
-    ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+    ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
-  ? Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+> = PublicTableNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Insert: infer I
     }
     ? I
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+  : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
+    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
         Insert: infer I
       }
       ? I
@@ -1116,22 +844,20 @@ export type TablesInsert<
     : never
 
 export type TablesUpdate<
-  DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
+  PublicTableNameOrOptions extends
+    | keyof PublicSchema["Tables"]
     | { schema: keyof Database },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof Database
-  }
-    ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+    ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
-  ? Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+> = PublicTableNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Update: infer U
     }
     ? U
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+  : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
+    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
         Update: infer U
       }
       ? U
@@ -1139,23 +865,21 @@ export type TablesUpdate<
     : never
 
 export type Enums<
-  DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema["Enums"]
+  PublicEnumNameOrOptions extends
+    | keyof PublicSchema["Enums"]
     | { schema: keyof Database },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
-    schema: keyof Database
-  }
-    ? keyof Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+  EnumName extends PublicEnumNameOrOptions extends { schema: keyof Database }
+    ? keyof Database[PublicEnumNameOrOptions["schema"]]["Enums"]
     : never = never,
-> = DefaultSchemaEnumNameOrOptions extends { schema: keyof Database }
-  ? Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
-  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
-    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+> = PublicEnumNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
+    ? PublicSchema["Enums"][PublicEnumNameOrOptions]
     : never
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
-    | keyof DefaultSchema["CompositeTypes"]
+    | keyof PublicSchema["CompositeTypes"]
     | { schema: keyof Database },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
     schema: keyof Database
@@ -1164,16 +888,6 @@ export type CompositeTypes<
     : never = never,
 > = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
   ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
-  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
-    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+  : PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
+    ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
-
-export const Constants = {
-  public: {
-    Enums: {
-      referral_status: ["pending", "completed"],
-      study_period_status: ["STARTED", "FINISHED"],
-      user_role: ["admin", "user"],
-    },
-  },
-} as const
