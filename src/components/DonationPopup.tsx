@@ -14,7 +14,7 @@ export const DonationPopup: React.FC<DonationPopupProps> = ({ isVisible }) => {
   return (
     <div 
       className={cn(
-        "fixed bottom-6 right-6 z-50 max-w-sm bg-gradient-to-r from-ramadan-purple to-ramadan-crimson p-5 rounded-xl shadow-xl border border-ramadan-gold/40 backdrop-blur-md transition-all duration-500 transform",
+        "fixed bottom-6 right-6 z-50 max-w-sm bg-gradient-to-r from-ramadan-purple to-ramadan-crimson p-5 rounded-xl shadow-xl border border-ramadan-gold/40 backdrop-blur-md transition-all duration-5000 transform",
         isVisible 
           ? "opacity-100 translate-y-0 animate-fade-in" 
           : "opacity-0 translate-y-12 pointer-events-none"
