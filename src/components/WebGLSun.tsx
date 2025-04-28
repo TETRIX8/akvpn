@@ -37,7 +37,7 @@ const SunRays = () => {
 
   return (
     <mesh ref={meshRef} scale={1.2}>
-      <torusGeometry args={[4, 0.2, 16, 50]} />
+      <ringGeometry args={[3.5, 4, 64]} />
       <meshStandardMaterial 
         color="#ff5500"
         emissive="#ff3300"
