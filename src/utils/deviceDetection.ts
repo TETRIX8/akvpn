@@ -1,5 +1,5 @@
 
-type DeviceType = "ios" | "android" | "windows" | "macos" | "unknown";
+export type DeviceType = "ios" | "android" | "windows" | "macos" | "unknown";
 
 export function detectDeviceType(): DeviceType {
   const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;

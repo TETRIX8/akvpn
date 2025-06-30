@@ -1,9 +1,10 @@
+
 import React from "react";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
 import { ArrowRight, Download } from "lucide-react";
 import { toast } from "./ui/use-toast";
-import { detectDeviceType, getDeviceDisplayName } from "@/utils/deviceDetection";
+import { detectDeviceType, getDeviceDisplayName, type DeviceType } from "@/utils/deviceDetection";
 
 interface PlatformLink {
   name: string;
@@ -34,7 +35,7 @@ const platforms: PlatformLink[] = [
 ];
 
 interface SetupInstructionsProps {
-  selectedPlatform?: string;
+  selectedPlatform?: DeviceType;
 }
 
 export const SetupInstructions = ({ selectedPlatform }: SetupInstructionsProps) => {
