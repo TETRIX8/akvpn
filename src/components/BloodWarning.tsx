@@ -1,12 +1,26 @@
 
 import React, { useEffect, useState } from "react";
+import { Button } from "./ui/button";
+import { ArrowRight } from "lucide-react";
 
 export const BloodWarning = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const [showBotButton, setShowBotButton] = useState(false);
 
   useEffect(() => {
     setIsVisible(true);
+    
+    // Show bot button after animation completes (4 seconds)
+    const timer = setTimeout(() => {
+      setShowBotButton(true);
+    }, 4000);
+
+    return () => clearTimeout(timer);
   }, []);
+
+  const handleBotRedirect = () => {
+    window.open('https://t.me/akvpnn_bot', '_blank');
+  };
 
   return (
     <div className="my-8 relative px-4 md:px-0">
@@ -72,6 +86,17 @@ export const BloodWarning = () => {
             }
           }
 
+          @keyframes bot-appear {
+            0% {
+              opacity: 0;
+              transform: translateY(20px) scale(0.8);
+            }
+            100% {
+              opacity: 1;
+              transform: translateY(0) scale(1);
+            }
+          }
+
           .blood-text {
             font-family: 'Creepster', cursive;
             animation: blood-drip 3s ease-in-out forwards, blood-pulse 2s ease-in-out infinite;
@@ -90,6 +115,10 @@ export const BloodWarning = () => {
           .blood-drop:nth-child(2) { left: 40%; animation-delay: 1s; }
           .blood-drop:nth-child(3) { left: 60%; animation-delay: 1.5s; }
           .blood-drop:nth-child(4) { left: 80%; animation-delay: 2s; }
+
+          .bot-button {
+            animation: bot-appear 0.8s ease-out forwards;
+          }
         `}
       </style>
       
@@ -127,9 +156,23 @@ export const BloodWarning = () => {
             VPN СЕРВИСОВ
           </div>
 
-          <div className="text-sm md:text-base text-red-300 italic">
+          <div className="text-sm md:text-base text-red-300 italic mb-8">
             Данный сайт предоставлен исключительно в образовательных целях
           </div>
+
+          {/* Bot transition button */}
+          {showBotButton && (
+            <div className="bot-button">
+              <Button
+                onClick={handleBotRedirect}
+                className="bg-red-600 hover:bg-red-700 text-white font-bold px-8 py-3 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-300"
+                size="lg"
+              >
+                Перейти в бот @akvpnn_bot
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </div>
+          )}
         </div>
 
         {/* Дополнительные эффекты крови */}

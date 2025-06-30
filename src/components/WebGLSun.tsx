@@ -1,84 +1,87 @@
 
 import React, { useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import * as THREE from 'three';
+import { Mesh } from 'three';
 
-const Sun = () => {
-  const meshRef = useRef<THREE.Mesh>(null);
-  
-  useFrame(() => {
-    if (!meshRef.current) return;
-    meshRef.current.rotation.y += 0.003;
-    meshRef.current.rotation.x += 0.001;
-  });
+function Sun() {
+  const meshRef = useRef<Mesh>(null);
 
-  return (
-    <mesh ref={meshRef}>
-      <sphereGeometry args={[3, 32, 32]} />
-      <meshBasicMaterial 
-        color="#ff9500"
-      />
-    </mesh>
-  );
-};
-
-const SunGlow = () => {
-  return (
-    <mesh>
-      <sphereGeometry args={[3.5, 32, 32]} />
-      <meshBasicMaterial
-        color="#ff9500"
-        transparent={true}
-        opacity={0.2}
-      />
-    </mesh>
-  );
-};
-
-const SunRays = () => {
-  const meshRef = useRef<THREE.Mesh>(null);
-  
-  useFrame(() => {
-    if (!meshRef.current) return;
-    meshRef.current.rotation.z += 0.001;
-  });
-
-  return (
-    <mesh ref={meshRef} scale={1.2}>
-      <circleGeometry args={[4, 32]} />
-      <meshBasicMaterial 
-        color="#ff5500"
-        transparent={true}
-        opacity={0.6}
-      />
-    </mesh>
-  );
-};
-
-export const WebGLSun = ({ position = "top-right" }: { position?: "top-right" | "bottom-right" | "top-left" | "bottom-left" }) => {
-  const getPositionStyles = () => {
-    switch (position) {
-      case "top-right":
-        return "top-0 right-0";
-      case "bottom-right":
-        return "bottom-0 right-0";
-      case "top-left":
-        return "top-0 left-0";
-      case "bottom-left":
-        return "bottom-0 left-0";
-      default:
-        return "top-0 right-0";
+  useFrame((state) => {
+    if (meshRef.current) {
+      meshRef.current.rotation.x = state.clock.elapsedTime * 0.5;
+      meshRef.current.rotation.y = state.clock.elapsedTime * 0.2;
     }
-  };
+  });
 
   return (
-    <div className={`absolute ${getPositionStyles()} w-60 h-60 md:w-80 md:h-80 overflow-hidden pointer-events-none z-10 opacity-75`}>
-      <Canvas camera={{ position: [0, 0, 10], fov: 40 }}>
-        <ambientLight intensity={0.3} />
-        <pointLight position={[10, 10, 10]} intensity={2} />
-        <pointLight position={[-10, -10, 10]} intensity={1} />
+    <mesh ref={meshRef} position={[0, 0, 0]}>
+      <sphereGeometry args={[1, 32, 32]} />
+      <meshBasicMaterial color="#FFD700" />
+    </mesh>
+  );
+}
+
+function Corona() {
+  const meshRef = useRef<Mesh>(null);
+
+  useFrame((state) => {
+    if (meshRef.current) {
+      meshRef.current.rotation.z = state.clock.elapsedTime * 0.3;
+      meshRef.current.scale.setScalar(1 + Math.sin(state.clock.elapsedTime * 2) * 0.1);
+    }
+  });
+
+  return (
+    <mesh ref={meshRef} position={[0, 0, 0]}>
+      <sphereGeometry args={[1.2, 32, 32]} />
+      <meshBasicMaterial color="#FFA500" transparent opacity={0.3} />
+    </mesh>
+  );
+}
+
+function SunRays() {
+  const raysRef = useRef<Mesh>(null);
+
+  useFrame((state) => {
+    if (raysRef.current) {
+      raysRef.current.rotation.z = state.clock.elapsedTime * 0.1;
+    }
+  });
+
+  const rays = [];
+  for (let i = 0; i < 12; i++) {
+    const angle = (i / 12) * Math.PI * 2;
+    const x = Math.cos(angle) * 2;
+    const y = Math.sin(angle) * 2;
+    
+    rays.push(
+      <mesh key={i} position={[x, y, 0]} rotation={[0, 0, angle]}>
+        <circleGeometry args={[0.1, 8]} />
+        <meshBasicMaterial color="#FFFF00" transparent opacity={0.6} />
+      </mesh>
+    );
+  }
+
+  return (
+    <mesh ref={raysRef}>
+      {rays}
+    </mesh>
+  );
+}
+
+export const WebGLSun = () => {
+  return (
+    <div className="w-full h-64 relative">
+      <Canvas
+        camera={{ position: [0, 0, 5], fov: 50 }}
+        style={{ background: 'transparent' }}
+      >
+        <ambientLight intensity={0.6} />
+        <pointLight position={[10, 10, 10]} intensity={1} />
+        <pointLight position={[-10, -10, -10]} intensity={0.5} />
+        
         <Sun />
-        <SunGlow />
+        <Corona />
         <SunRays />
       </Canvas>
     </div>
