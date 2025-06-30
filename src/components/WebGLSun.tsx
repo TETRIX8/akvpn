@@ -34,7 +34,7 @@ function Corona() {
   return (
     <mesh ref={meshRef} position={[0, 0, 0]}>
       <sphereGeometry args={[1.2, 32, 32]} />
-      <meshBasicMaterial color="#FFA500" transparent opacity={0.3} />
+      <meshBasicMaterial color="#FFA500" transparent={true} opacity={0.3} />
     </mesh>
   );
 }
@@ -57,7 +57,7 @@ function SunRays() {
     rays.push(
       <mesh key={i} position={[x, y, 0]} rotation={[0, 0, angle]}>
         <circleGeometry args={[0.1, 8]} />
-        <meshBasicMaterial color="#FFFF00" transparent opacity={0.6} />
+        <meshBasicMaterial color="#FFFF00" transparent={true} opacity={0.6} />
       </mesh>
     );
   }
